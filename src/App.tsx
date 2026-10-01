@@ -4,6 +4,7 @@ import { Sidebar } from './components/Sidebar/Sidebar';
 import { ChatWindow } from './components/ChatWindow/ChatWindow';
 import { useChatPolling } from './hooks/useChatPolling';
 import { useConversations } from './hooks/useConversations';
+import { useMessagesStorage } from './hooks/useMessagesStorage';
 import { fromChatId, toChatId } from './utils/chatId';
 import type { ChatMessage, Credentials } from './types';
 import './App.css';
@@ -12,9 +13,11 @@ export default function App() {
   const [credentials, setCredentials] = useState<Credentials | null>(null);
   const { conversations, addOrGet, remove, touch, markRead } = useConversations();
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
-  const [messagesByChat, setMessagesByChat] = useState<
-    Record<string, ChatMessage[]>
-  >({});
+  const {
+    messagesByChat,
+    setMessagesByChat,
+    clearAll: clearAllMessages,
+  } = useMessagesStorage();
 
   // Входящие — от polling, раскладываем по чатам
   const handleIncoming = useCallback(
@@ -66,6 +69,7 @@ export default function App() {
   };
 
   const handleLogout = () => {
+    clearAllMessages();
     setCredentials(null);
     setActiveChatId(null);
     setMessagesByChat({});
