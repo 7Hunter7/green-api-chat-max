@@ -40,3 +40,33 @@ export async function receiveNotification(c: Credentials): Promise<any | null> {
 export async function deleteNotification(c: Credentials, receiptId: number): Promise<void> {
   await fetch(buildUrl(c, `deleteNotification/${receiptId}`), { method: 'DELETE' });
 }
+
+/** Получить QR-код (base64) для авторизации инстанса MAX */
+export async function getQrCode(
+  c: Credentials,
+): Promise<{ type: string; message: string }> {
+  const res = await fetch(buildUrl(c, 'qr'));
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+/** Отправить пароль 2FA (Cloud Password) */
+export async function sendAuthorizationPassword(
+  c: Credentials,
+  password: string,
+): Promise<{ status: boolean; data: { status: string; reason: string } }> {
+  const res = await fetch(buildUrl(c, 'sendAuthorizationPassword'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password }),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+/** Разлогинить инстанс */
+export async function logout(c: Credentials): Promise<{ isLogout: boolean }> {
+  const res = await fetch(buildUrl(c, 'logout'));
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
