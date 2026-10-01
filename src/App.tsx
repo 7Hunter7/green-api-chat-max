@@ -125,10 +125,9 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    clearAllMessages();
     setCredentials(null);
     setActiveChatId(null);
-    setMessagesByChat({});
+    clearAllMessages();
   };
 
   const handleMessageSent = (msg: ChatMessage) => {
