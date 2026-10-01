@@ -1,58 +1,29 @@
 .app {
   display: grid;
-  grid-template-columns: 380px 1fr;
+  grid-template-columns: 340px 1fr;
   height: 100vh;
   overflow: hidden;
 }
-.phone-prompt {
+
+.app__main {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-chat);
+}
+
+.app__placeholder {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  background: var(--bg-app);
 }
 
-.phone-prompt__card {
-  width: 360px;
-  padding: 32px;
+.app__placeholder-text {
+  color: var(--text-secondary);
+  font-size: 14px;
   background: var(--bg-panel);
-  border-radius: var(--radius);
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.phone-prompt__card h2 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  text-align: center;
-}
-
-.phone-prompt__card input {
-  padding: 12px 14px;
-  background: var(--bg-input);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-size: 14px;
-  outline: none;
-}
-.phone-prompt__card input:focus { border-color: var(--accent); }
-
-.phone-prompt__card button {
-  padding: 12px;
-  background: var(--accent);
-  border: none;
-  border-radius: 8px;
-  color: #fff;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.phone-prompt__logout {
-  background: transparent !important;
-  border: 1px solid var(--border) !important;
-  color: var(--text-secondary) !important;
-  font-weight: 400 !important;
+  padding: 8px 16px;
+  border-radius: 16px;
 }
