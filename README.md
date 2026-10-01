@@ -1,75 +1,116 @@
-# React + TypeScript + Vite
+# GREEN-API Chat (MAX)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Тестовое задание на позицию Frontend React-разработчик.
 
-Currently, two official plugins are available:
+Минимальный интерфейс для отправки и получения текстовых сообщений через GREEN-API мессенджера MAX.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Демо
 
-## React Compiler
+Локальный запуск: [http://localhost:5173](http://localhost:5173)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Стек
 
-## Expanding the ESLint configuration
+- **React 19** + **TypeScript** — UI и типизация
+- **Vite** — сборка и dev-сервер
+- **CSS-переменные** — темизация без UI-библиотек
+- **GREEN-API HTTP API** — транспорт сообщений
+- **Polling** через `receiveNotification` + `deleteNotification` — получение входящих
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Без Redux, без Router, без UI-китов.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Функционал
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Авторизация по `idInstance` + `apiTokenInstance`
+- Поддержка QR-кода (для неавторизованных инстансов) с автообновлением
+- Поддержка 2FA (`pendingPassword` → `SendAuthorizationPassword`)
+- Список чатов с сохранением в `localStorage`
+- Отправка сообщений (`SendMessage`) с оптимистичным UI
+- Получение сообщений (polling каждые 1.5 сек)
+- Индикатор непрочитанных в сайдбаре
+- Тёмная тема в стиле веб-клиента MAX
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Требования
 
+- Node.js 20+
+- npm 10+
+
+## Локальный запуск
+
+```bash
+git clone <your-repo-url>
+cd green-api-chat
+npm install
+cp .env.example .env
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Откроется `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Переменные окружения
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Переменная | Описание | По умолчанию |
+|---|---|---|
+| `VITE_API_URL` | Базовый URL GREEN-API | `https://3100.api.green-api.com` |
+
+## Использование
+
+1. Получите данные инстанса в [console.green-api.com](https://console.green-api.com).
+2. Введите в форму:
+   - `idInstance` — например `310022752482`
+   - `apiTokenInstance` — токен инстанса
+3. Если инстанс не авторизован — появится QR-код. Отсканируйте в приложении MAX:
+   **Настройки → Устройства → Подключить устройство**.
+4. Если включён 2FA — введите пароль.
+5. Нажмите **«+»** в сайдбаре, введите номер получателя в формате `79991234567` или `+7 999 123-45-67`.
+6. Пишите сообщения. Ответы приходят автоматически.
+
+## Скрипты
+
+| Команда | Что делает |
+|---|---|
+| `npm run dev` | Dev-сервер с HMR |
+| `npm run build` | Production-сборка в `dist/` |
+| `npm run preview` | Локальный просмотр собранного бандла |
+| `npm run lint` | ESLint |
+
+## Структура
 
 ```
+src/
+  api/greenApi.ts          — клиент GREEN-API (getState, send, receive, qr, logout)
+  hooks/
+    useChatPolling.ts      — рекурсивный polling входящих
+    useConversations.ts    — список чатов + localStorage
+    useMessagesStorage.ts  — история сообщений + localStorage
+  components/
+    LoginForm/             — экран входа + QR + 2FA
+    Sidebar/               — список чатов
+    ChatWindow/            — окно переписки
+    MessageList/           — пузыри сообщений
+    MessageInput/          — поле ввода
+  utils/
+    chatId.ts              — "79991234567" ⇄ "79991234567@c.us"
+    time.ts                — форматирование времени
+  types/                   — общие типы
+```
+
+## Особенности реализации
+
+- **Polling, не WebSocket.** Для тестового задания — проще и достаточно. В реальном продакшене был бы вебхук.
+- **Рекурсивный `setTimeout`, не `setInterval`** — предотвращает наложение запросов при медленной сети.
+- **`deleteNotification` обязателен** — без него сервер GREEN-API не отдаёт следующее уведомление.
+- **Оптимистичный UI** — сообщение появляется сразу, потом заменяется серверным `idMessage`.
+
+## Ограничения
+
+- Polling работает только при открытой вкладке.
+- История сообщений хранится в `localStorage` браузера, не на сервере.
+- Работает только с текстовыми сообщениями (по условиям задания).
+
+## Автор
+
+**Иван Калугин**
+
+- Telegram: [@Ivan_Anatolievich_Kalugin](https://t.me/Ivan_Anatolievich_Kalugin)
+- VK: [vk.com/id39443462](https://vk.com/id39443462)
+- e-mail: ivan_kalugin89@mail.ru
