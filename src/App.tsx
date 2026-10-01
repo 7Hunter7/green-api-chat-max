@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { LoginForm } from './components/LoginForm/LoginForm';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { ChatWindow } from './components/ChatWindow/ChatWindow';
 import { useChatPolling } from './hooks/useChatPolling';
 import { useConversations } from './hooks/useConversations';
 import { useMessagesStorage } from './hooks/useMessagesStorage';
-import { fromChatId, toChatId } from './utils/chatId';
 import type { ChatMessage, Credentials } from './types';
 import './App.css';
 
