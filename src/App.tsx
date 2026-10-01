@@ -1,15 +1,31 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LoginForm } from './components/LoginForm/LoginForm';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { ChatWindow } from './components/ChatWindow/ChatWindow';
+import { getStateInstance } from './api/greenApi';
 import { useChatPolling } from './hooks/useChatPolling';
 import { useConversations } from './hooks/useConversations';
 import { useMessagesStorage } from './hooks/useMessagesStorage';
-import type { ChatMessage, Credentials } from './types';
+import type { ChatMessage, Credentials, InstanceState } from './types';
 import './App.css';
 
+const CREDENTIALS_KEY = 'green-api-chat-credentials';
+
+function loadCredentials(): Credentials | null {
+  try {
+    const raw = localStorage.getItem(CREDENTIALS_KEY);
+    return raw ? (JSON.parse(raw) as Credentials) : null;
+  } catch {
+    return null;
+  }
+}
+
 export default function App() {
-  const [credentials, setCredentials] = useState<Credentials | null>(null);
+  const [credentials, setCredentials] = useState<Credentials | null>(() =>
+    loadCredentials(),
+  );
+  const [restoring, setRestoring] = useState(!!loadCredentials());
+
   const { conversations, addOrGet, remove, touch, markRead } = useConversations();
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const {
@@ -18,6 +34,47 @@ export default function App() {
     clearAll: clearAllMessages,
   } = useMessagesStorage();
 
+  // Восстановление сессии при перезагрузке
+  useEffect(() => {
+    const saved = loadCredentials();
+    if (!saved) {
+      setRestoring(false);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const state = (await getStateInstance(saved)) as InstanceState;
+        if (cancelled) return;
+        if (state === 'authorized') {
+          setCredentials(saved);
+        } else {
+          localStorage.removeItem(CREDENTIALS_KEY);
+          setCredentials(null);
+        }
+      } catch {
+        if (!cancelled) {
+          localStorage.removeItem(CREDENTIALS_KEY);
+          setCredentials(null);
+        }
+      } finally {
+        if (!cancelled) setRestoring(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Сохранение/удаление credentials при изменении
+  useEffect(() => {
+    if (credentials) {
+      localStorage.setItem(CREDENTIALS_KEY, JSON.stringify(credentials));
+    } else {
+      localStorage.removeItem(CREDENTIALS_KEY);
+    }
+  }, [credentials]);
+  
   // Входящие — от polling, раскладываем по чатам
   const handleIncoming = useCallback(
     (msg: ChatMessage) => {
@@ -104,6 +161,14 @@ export default function App() {
       ),
     }));
   };
+
+  if (restoring) {
+    return (
+      <div className="app__placeholder">
+        <div className="app__placeholder-text">Загрузка…</div>
+      </div>
+    );
+  }
 
   if (!credentials) {
     return <LoginForm onLogin={setCredentials} />;
