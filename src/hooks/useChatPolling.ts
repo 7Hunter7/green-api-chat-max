@@ -9,32 +9,36 @@ interface Params {
 }
 
 export function useChatPolling({ credentials, onMessage, enabled }: Params) {
-  const stoppedRef = useRef(false);
   const onMessageRef = useRef(onMessage);
-  onMessageRef.current = onMessage;
+  useEffect(() => {
+    onMessageRef.current = onMessage;
+  }, [onMessage]);
 
   useEffect(() => {
     if (!credentials || !enabled) return;
-    stoppedRef.current = false;
+    let stopped = false;
+    let timerId: number | undefined;
 
     const tick = async () => {
-      if (stoppedRef.current) return;
+      if (stopped) return;
       try {
         const notification = await receiveNotification(credentials);
         if (notification) {
           const { body, receiptId } = notification;
 
-          if (body?.typeWebhook === 'incomingMessageReceived') {
-            const msg = body.messageData;
-            if (msg?.typeMessage === 'textMessage') {
-              onMessageRef.current({
-                id: body.idMessage,
-                chatId: body.senderData.chatId,
-                text: msg.textMessageData.textMessage,
-                timestamp: body.timestamp * 1000,
-                isOutgoing: false,
-              });
-            }
+          if (
+            body.typeWebhook === 'incomingMessageReceived' &&
+            body.messageData?.typeMessage === 'textMessage' &&
+            body.senderData &&
+            body.messageData.textMessageData
+          ) {
+            onMessageRef.current({
+              id: body.idMessage ?? `in-${Date.now()}`,
+              chatId: body.senderData.chatId,
+              text: body.messageData.textMessageData.textMessage,
+              timestamp: body.timestamp * 1000,
+              isOutgoing: false,
+            });
           }
 
           await deleteNotification(credentials, receiptId);
@@ -42,14 +46,15 @@ export function useChatPolling({ credentials, onMessage, enabled }: Params) {
       } catch (e) {
         console.warn('Polling error:', e);
       }
-      if (!stoppedRef.current) {
-        setTimeout(tick, 1500);
+      if (!stopped) {
+        timerId = window.setTimeout(tick, 1500);
       }
     };
 
     tick();
     return () => {
-      stoppedRef.current = true;
+      stopped = true;
+      if (timerId !== undefined) window.clearTimeout(timerId);
     };
   }, [credentials, enabled]);
 }
