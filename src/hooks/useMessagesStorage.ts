@@ -25,5 +25,17 @@ export function useMessagesStorage() {
     setMessagesByChat({});
   }, []);
 
-  return { messagesByChat, setMessagesByChat, clearAll };
+  // Стабильные ссылки для использования в useCallback зависимостях
+  const updateMessages = useCallback(
+    (updater: (prev: Record<string, ChatMessage[]>) => Record<string, ChatMessage[]>) => {
+      setMessagesByChat(updater);
+    },
+    [],
+  );
+
+  return {
+    messagesByChat,
+    setMessagesByChat: updateMessages,
+    clearAll,
+  };
 }
