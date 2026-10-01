@@ -1,4 +1,8 @@
-import type { Credentials, GreenApiSendResponse } from '../types';
+import type {
+  Credentials,
+  GreenApiNotification,
+  GreenApiSendResponse,
+} from '../types';
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://3100.api.green-api.com';
 
@@ -29,11 +33,13 @@ export async function sendMessage(
 }
 
 /** Получить одно уведомление (или null) */
-export async function receiveNotification(c: Credentials): Promise<any | null> {
+export async function receiveNotification(
+  c: Credentials,
+): Promise<GreenApiNotification | null> {
   const res = await fetch(buildUrl(c, 'receiveNotification'));
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const text = await res.text();
-  return text ? JSON.parse(text) : null;
+  return text ? (JSON.parse(text) as GreenApiNotification) : null;
 }
 
 /** Удалить уведомление — обязательно, иначе следующее не придет */
