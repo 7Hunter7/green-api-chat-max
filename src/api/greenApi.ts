@@ -9,6 +9,10 @@ const BASE_URL = import.meta.env.VITE_API_URL ?? 'https://3100.api.green-api.com
 const buildUrl = (c: Credentials, method: string) =>
   `${BASE_URL}/waInstance${c.idInstance}/${method}/${c.apiTokenInstance}`;
 
+/** URL с явным префиксом v3 — нужен для части методов MAX API */
+const buildUrlV3 = (c: Credentials, method: string) =>
+  `${BASE_URL}/waInstance${c.idInstance}/v3/${method}/${c.apiTokenInstance}`;
+
 /** Проверка учетных данных */
 export async function getStateInstance(c: Credentials): Promise<string> {
   const res = await fetch(buildUrl(c, 'getStateInstance'));
@@ -44,7 +48,19 @@ export async function receiveNotification(
 
 /** Удалить уведомление — обязательно, иначе следующее не придет */
 export async function deleteNotification(c: Credentials, receiptId: number): Promise<void> {
-  await fetch(buildUrl(c, `deleteNotification/${receiptId}`), { method: 'DELETE' });
+  // Сначала пробуем без префикса v3 (короткий путь)
+  let res = await fetch(buildUrl(c, `deleteNotification/${receiptId}`), { method: 'DELETE' });
+  if (res.ok) return;
+
+  // Fallback: c префиксом v3 (требование части методов MAX API)
+  res = await fetch(buildUrlV3(c, `deleteNotification/${receiptId}`), {
+    method: 'DELETE',
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`deleteNotification failed: HTTP ${res.status} ${text}`);
+  }
 }
 
 /** Получить QR-код (base64) для авторизации инстанса MAX */
