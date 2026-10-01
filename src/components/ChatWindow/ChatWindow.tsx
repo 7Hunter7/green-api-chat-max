@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { sendMessage } from '../../api/greenApi';
-import { useChatPolling } from '../../hooks/useChatPolling';
-import { toChatId, fromChatId } from '../../utils/chatId';
+import { fromChatId } from '../../utils/chatId';
 import type { ChatMessage, Credentials } from '../../types';
 import { MessageList } from '../MessageList/MessageList';
 import { MessageInput } from '../MessageInput/MessageInput';
@@ -9,54 +8,43 @@ import './ChatWindow.css';
 
 interface Props {
   credentials: Credentials;
-  phone: string;
-  onLogout: () => void;
+  chatId: string;
+  messages: ChatMessage[];
+  onMessageSent: (msg: ChatMessage) => void;
+  onMessageConfirmed: (localId: string, serverId: string) => void;
+  onMessageFailed: (localId: string) => void;
 }
 
-export function ChatWindow({ credentials, phone, onLogout }: Props) {
-  const chatId = toChatId(phone);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+export function ChatWindow({
+  credentials,
+  chatId,
+  messages,
+  onMessageSent,
+  onMessageConfirmed,
+  onMessageFailed,
+}: Props) {
   const [sending, setSending] = useState(false);
-
-  // Входящие из polling — только по нашему chatId
-  useChatPolling({
-    credentials,
-    enabled: true,
-    onMessage: (msg) => {
-      if (msg.chatId !== chatId) return;
-      setMessages((prev) => [...prev, msg]);
-    },
-  });
-
-  // Сброс истории при смене чата
-  useEffect(() => {
-    setMessages([]);
-  }, [chatId]);
 
   const handleSend = async (text: string) => {
     if (!text.trim() || sending) return;
     setSending(true);
 
-    const optimistic: ChatMessage = {
-      id: `local-${Date.now()}`,
+    const localId = `local-${Date.now()}`;
+    onMessageSent({
+      id: localId,
       chatId,
       text,
       timestamp: Date.now(),
       isOutgoing: true,
       status: 'sent',
-    };
-    setMessages((prev) => [...prev, optimistic]);
+    });
 
     try {
       const { idMessage } = await sendMessage(credentials, chatId, text);
-      setMessages((prev) =>
-        prev.map((m) => (m.id === optimistic.id ? { ...m, id: idMessage } : m)),
-      );
+      onMessageConfirmed(localId, idMessage);
     } catch (e) {
       console.error('sendMessage failed:', e);
-      setMessages((prev) =>
-        prev.filter((m) => m.id !== optimistic.id),
-      );
+      onMessageFailed(localId);
       alert('Не удалось отправить сообщение');
     } finally {
       setSending(false);
@@ -73,9 +61,6 @@ export function ChatWindow({ credentials, phone, onLogout }: Props) {
           <div className="chat-header__name">{fromChatId(chatId)}</div>
           <div className="chat-header__status">личный чат</div>
         </div>
-        <button className="chat-header__logout" onClick={onLogout}>
-          Выйти
-        </button>
       </header>
 
       <MessageList messages={messages} />
