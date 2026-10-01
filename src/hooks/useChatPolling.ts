@@ -5,14 +5,25 @@ import type { ChatMessage, Credentials } from '../types';
 interface Params {
   credentials: Credentials | null;
   onMessage: (msg: ChatMessage) => void;
+  onStatus: (idMessage: string, status: ChatMessage['status']) => void;
   enabled: boolean;
 }
 
-export function useChatPolling({ credentials, onMessage, enabled }: Params) {
+export function useChatPolling({
+  credentials,
+  onMessage,
+  onStatus,
+  enabled,
+}: Params) {
   const onMessageRef = useRef(onMessage);
   useEffect(() => {
     onMessageRef.current = onMessage;
   }, [onMessage]);
+
+  const onStatusRef = useRef(onStatus);
+  useEffect(() => {
+    onStatusRef.current = onStatus;
+  }, [onStatus]);
 
   useEffect(() => {
     if (!credentials || !enabled) return;
@@ -26,6 +37,7 @@ export function useChatPolling({ credentials, onMessage, enabled }: Params) {
         if (notification) {
           const { body, receiptId } = notification;
 
+          // Входящее текстовое сообщение
           if (
             body.typeWebhook === 'incomingMessageReceived' &&
             body.messageData?.typeMessage === 'textMessage' &&
@@ -39,6 +51,18 @@ export function useChatPolling({ credentials, onMessage, enabled }: Params) {
               timestamp: body.timestamp * 1000,
               isOutgoing: false,
             });
+          }
+
+          // Статус отправленного нами сообщения
+          if (
+            body.typeWebhook === 'outgoingMessageStatus' &&
+            body.idMessage &&
+            body.status
+          ) {
+            onStatusRef.current(
+              body.idMessage,
+              mapStatus(body.status),
+            );
           }
 
           await deleteNotification(credentials, receiptId);
@@ -57,4 +81,20 @@ export function useChatPolling({ credentials, onMessage, enabled }: Params) {
       if (timerId !== undefined) window.clearTimeout(timerId);
     };
   }, [credentials, enabled]);
+}
+
+function mapStatus(raw: string): ChatMessage['status'] {
+  switch (raw) {
+    case 'sent':
+    case 'delivered':
+    case 'read':
+      return raw;
+    case 'noAccount':
+    case 'notInGroup':
+      return 'failed';
+    case 'pending':
+      return 'pending';
+    default:
+      return 'failed';
+  }
 }

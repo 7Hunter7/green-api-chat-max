@@ -35,8 +35,11 @@ export function MessageList({ messages }: Props) {
           <div className="bubble__meta">
             <span>{formatTime(m.timestamp)}</span>
             {m.isOutgoing && m.status && (
-              <span className={`bubble__status bubble__status--${m.status}`}>
-                {m.status === 'read' ? '✓✓' : '✓'}
+              <span
+                className={`bubble__status bubble__status--${m.status}`}
+                aria-label={statusLabel(m.status)}
+              >
+                {statusGlyph(m.status)}
               </span>
             )}
           </div>
@@ -45,4 +48,34 @@ export function MessageList({ messages }: Props) {
       <div ref={bottomRef} />
     </div>
   );
+}
+
+function statusGlyph(status: NonNullable<ChatMessage['status']>): string {
+  switch (status) {
+    case 'pending':
+      return '...';
+    case 'sent':
+      return '✓';
+    case 'delivered':
+      return '✓✓';
+    case 'read':
+      return '✓✓';
+    case 'failed':
+      return '✕';
+  }
+}
+
+function statusLabel(status: NonNullable<ChatMessage['status']>): string {
+  switch (status) {
+    case 'pending':
+      return 'Отправляется';
+    case 'sent':
+      return 'Отправлено';
+    case 'delivered':
+      return 'Доставлено';
+    case 'read':
+      return 'Прочитано';
+    case 'failed':
+      return 'Не доставлено';
+  }
 }

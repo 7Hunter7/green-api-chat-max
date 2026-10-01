@@ -9,7 +9,7 @@ export interface ChatMessage {
   text: string;
   timestamp: number;
   isOutgoing: boolean;
-  status?: 'sent' | 'delivered' | 'read';
+  status?: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
 }
 
 export interface GreenApiSendResponse {
@@ -40,6 +40,8 @@ export interface GreenApiNotification {
     typeWebhook: string;
     timestamp: number;
     idMessage?: string;
+    status?: string;
+    chatId?: string;
     senderData?: {
       chatId: string;
       sender: string;

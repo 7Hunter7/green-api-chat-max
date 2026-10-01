@@ -36,7 +36,7 @@ export function ChatWindow({
       text,
       timestamp: Date.now(),
       isOutgoing: true,
-      status: 'sent',
+      status: 'pending',
     });
 
     try {

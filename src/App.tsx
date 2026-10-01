@@ -89,10 +89,28 @@ export default function App() {
     [activeChatId, touch, setMessagesByChat],
   );
 
+  const handleStatus = useCallback(
+    (idMessage: string, status: ChatMessage['status']) => {
+      setMessagesByChat((prev) => {
+        // Ищем во всех чатах — idMessage уникален
+        const next: typeof prev = {};
+        for (const [chatId, list] of Object.entries(prev)) {
+          const has = list.some((m) => m.id === idMessage);
+          next[chatId] = has
+            ? list.map((m) => (m.id === idMessage ? { ...m, status } : m))
+            : list;
+        }
+        return next;
+      });
+    },
+    [setMessagesByChat],
+  );
+
   useChatPolling({
     credentials,
     enabled: !!credentials,
     onMessage: handleIncoming,
+    onStatus: handleStatus,
   });
 
   const activeMessages = useMemo(
