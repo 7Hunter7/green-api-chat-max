@@ -26,9 +26,9 @@ export function useMessagesStorage() {
   }, []);
 
   // Стабильные ссылки для использования в useCallback зависимостях
-  const updateMessages = useCallback(
-    (updater: (prev: Record<string, ChatMessage[]>) => Record<string, ChatMessage[]>) => {
-      setMessagesByChat(updater);
+  const updateMessages: typeof setMessagesByChat = useCallback(
+    (action) => {
+      setMessagesByChat(action);
     },
     [],
   );

@@ -29,7 +29,7 @@ export default function App() {
       const isActive = msg.chatId === activeChatId;
       touch(msg.chatId, msg, isActive);
     },
-    [activeChatId, touch],
+    [activeChatId, touch, setMessagesByChat],
   );
 
   useChatPolling({
