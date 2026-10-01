@@ -25,3 +25,11 @@ export type InstanceState =
   | 'suspended'
   | 'yellowCard'
   | 'redCard';
+
+export interface Conversation {
+  chatId: string;       // "79991234567@c.us"
+  phone: string;        // "+79991234567" — отображается
+  lastMessage?: string;
+  lastTimestamp?: number;
+  unreadCount: number;
+}
