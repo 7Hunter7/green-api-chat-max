@@ -15,3 +15,13 @@ export interface ChatMessage {
 export interface GreenApiSendResponse {
   idMessage: string;
 }
+
+export type InstanceState =
+  | 'authorized'
+  | 'notAuthorized'
+  | 'starting'
+  | 'pendingPassword'
+  | 'blocked'
+  | 'suspended'
+  | 'yellowCard'
+  | 'redCard';
