@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { sendMessage } from '../../api/greenApi';
-import { fromChatId } from '../../utils/chatId';
-import type { ChatMessage, Credentials } from '../../types';
+import { formatPhone } from '../../utils/chatId';
+import type { ChatMessage, Conversation, Credentials } from '../../types';
 import { MessageList } from '../MessageList/MessageList';
 import { MessageInput } from '../MessageInput/MessageInput';
 import './ChatWindow.css';
@@ -9,6 +9,7 @@ import './ChatWindow.css';
 interface Props {
   credentials: Credentials;
   chatId: string;
+  conversation: Conversation;
   messages: ChatMessage[];
   onMessageSent: (msg: ChatMessage) => void;
   onMessageConfirmed: (localId: string, serverId: string) => void;
@@ -18,6 +19,7 @@ interface Props {
 export function ChatWindow({
   credentials,
   chatId,
+  conversation,
   messages,
   onMessageSent,
   onMessageConfirmed,
@@ -51,14 +53,15 @@ export function ChatWindow({
     }
   };
 
+  const phone = conversation.phone;
+  const avatarText = phone.replace(/\D/g, '').slice(-2) || '??';
+
   return (
     <div className="chat-window">
       <header className="chat-header">
-        <div className="chat-header__avatar">
-          {fromChatId(chatId).slice(-2)}
-        </div>
+        <div className="chat-header__avatar">{avatarText}</div>
         <div className="chat-header__info">
-          <div className="chat-header__name">{fromChatId(chatId)}</div>
+          <div className="chat-header__name">{formatPhone(phone)}</div>
           <div className="chat-header__status">личный чат</div>
         </div>
       </header>
