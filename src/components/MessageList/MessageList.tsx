@@ -45,6 +45,9 @@ export function MessageList({ messages }: Props) {
             {m.isOutgoing && m.status === 'failed' && m.error && (
               <span className="bubble__error" title={m.error}>!</span>
             )}
+            {!m.isOutgoing && m.senderName && (
+              <div className="bubble__sender">{m.senderName}</div>
+            )}
           </div>
         </div>
       ))}

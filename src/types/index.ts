@@ -11,6 +11,7 @@ export interface ChatMessage {
   isOutgoing: boolean;
   status?: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
   error?: string;
+  senderName?: string;
 }
 
 export interface GreenApiSendResponse {

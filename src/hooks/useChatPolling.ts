@@ -50,6 +50,7 @@ export function useChatPolling({
               text: body.messageData.textMessageData.textMessage,
               timestamp: body.timestamp * 1000,
               isOutgoing: false,
+              senderName: body.senderData.senderName,
             });
           }
 

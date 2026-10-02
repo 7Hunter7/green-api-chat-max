@@ -65,3 +65,10 @@
   font-weight: 700;
   cursor: help;
 }
+
+.bubble__sender {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
