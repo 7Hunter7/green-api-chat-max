@@ -185,6 +185,11 @@ export default function App() {
     }));
   };
 
+  const activeConversation = useMemo(
+    () => conversations.find((c) => c.chatId === activeChatId),
+    [conversations, activeChatId],
+  );
+
   if (restoring) {
     return (
       <div className="app__placeholder">
@@ -208,10 +213,12 @@ export default function App() {
         onLogout={handleLogout}
       />
       <main className="app__main">
-        {activeChatId ? (
+        {activeChatId && activeConversation ? (
           <ChatWindow
+            key={activeChatId}
             credentials={credentials}
             chatId={activeChatId}
+            conversation={activeConversation}
             messages={activeMessages}
             onMessageSent={handleMessageSent}
             onMessageConfirmed={handleMessageConfirmed}
