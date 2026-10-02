@@ -92,3 +92,19 @@ export async function logout(c: Credentials): Promise<{ isLogout: boolean }> {
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
+
+/** Проверить наличие аккаунта MAX по номеру телефона -> получить внутренний chatId */
+export async function checkAccount(
+  c: Credentials,
+  phoneNumber: string,
+  force = false,
+): Promise<{ exist: boolean; chatId: string; fromCache?: boolean; status?: boolean; reason?: string }> {
+  const digits = phoneNumber.replace(/\D/g, '');
+  const res = await fetch(buildUrl(c, 'checkAccount'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phoneNumber: Number(digits), force }),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
