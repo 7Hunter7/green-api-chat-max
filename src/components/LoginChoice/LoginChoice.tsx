@@ -24,7 +24,6 @@ export function LoginChoice({ onChooseQr, onChooseCredentials }: Props) {
           </svg>
         </div>
 
-        <h1 className="login-card__title">GREEN-API Chat</h1>
         <p className="login-card__hint">Войдите, чтобы начать общение</p>
 
         <button
