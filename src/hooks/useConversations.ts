@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react';
-import { toChatId, fromChatId } from '../utils/chatId';
 import type { ChatMessage, Conversation } from '../types';
 
 const LS_KEY = 'green-api-chat-conversations';
@@ -27,15 +26,18 @@ export function useConversations() {
     saveToStorage(next);
   }, []);
 
+  /**
+   * chatId — внутренний id MAX (напр. "10000000"), получен через checkAccount.
+   * phone — номер в виде "+7 999 123-45-67" для UI.
+   */
   const addOrGet = useCallback(
-    (phone: string): Conversation => {
-      const chatId = toChatId(phone);
+    (chatId: string, phone: string): Conversation => {
       const existing = conversations.find((c) => c.chatId === chatId);
       if (existing) return existing;
 
       const conversation: Conversation = {
         chatId,
-        phone: fromChatId(chatId),
+        phone,
         unreadCount: 0,
         lastTimestamp: Date.now(),
       };
