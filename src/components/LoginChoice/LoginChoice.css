@@ -1,0 +1,53 @@
+.login-card--max {
+  align-items: stretch;
+  gap: 12px;
+  text-align: center;
+}
+
+.max-logo {
+  display: flex;
+  justify-content: center;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.login-card__title {
+  margin: 0 0 4px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.login-card__hint {
+  margin: 0 0 20px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.login-card__primary {
+  padding: 14px;
+  background: var(--accent);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  transition: opacity 0.15s;
+}
+.login-card__primary:hover { opacity: 0.9; }
+
+.login-card__secondary {
+  padding: 14px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 15px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.login-card__secondary:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+}
