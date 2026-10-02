@@ -7,7 +7,7 @@ interface Props {
   conversations: Conversation[];
   activeChatId: string | null;
   onSelect: (chatId: string) => void;
-  onAdd: (phone: string) => void;
+  onAdd: (phone: string) => void | Promise<void>;
   onRemove: (chatId: string) => void;
   onLogout: () => void;
 }
@@ -23,11 +23,11 @@ export function Sidebar({
   const [newPhone, setNewPhone] = useState('');
   const [adding, setAdding] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const p = newPhone.trim();
     if (!p) return;
-    onAdd(p);
+    await onAdd(p);
     setNewPhone('');
     setAdding(false);
   };
