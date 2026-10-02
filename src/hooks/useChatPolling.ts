@@ -5,7 +5,8 @@ import type { ChatMessage, Credentials } from '../types';
 interface Params {
   credentials: Credentials | null;
   onMessage: (msg: ChatMessage) => void;
-  onStatus: (idMessage: string, status: ChatMessage['status']) => void;
+  onStatus: (idMessage: string, status: ChatMessage['status'], description?: string) => void;
+  onInstanceStateChange?: (state: string) => void;
   enabled: boolean;
 }
 
@@ -35,6 +36,10 @@ export function useChatPolling({
       try {
         const notification = await receiveNotification(credentials);
         if (notification) {
+          if (notification.body.instanceData?.typeInstance !== 'v3') {
+            await deleteNotification(credentials, notification.receiptId);
+            return;
+          }
           const { body, receiptId } = notification;
 
           // Входящее текстовое сообщение
