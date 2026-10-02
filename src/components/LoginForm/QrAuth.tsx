@@ -55,7 +55,9 @@ export function QrAuth({ onLogin, onPendingPassword, onBack }: Props) {
   useEffect(() => {
     if (stage !== "qr" || !creds) return;
 
-    loadQr(creds);
+    // Первый запрос — асинхронно, чтобы не было синхронного setState в эффекте
+    const initialTimer = window.setTimeout(() => loadQr(creds), 0);
+
     qrTimerRef.current = window.setInterval(() => loadQr(creds), 5000);
 
     stateTimerRef.current = window.setInterval(async () => {
@@ -73,7 +75,10 @@ export function QrAuth({ onLogin, onPendingPassword, onBack }: Props) {
       }
     }, 3000);
 
-    return stopTimers;
+    return () => {
+      window.clearTimeout(initialTimer);
+      stopTimers();
+    };
   }, [stage, creds, loadQr, onLogin, onPendingPassword]);
 
   if (stage === "credentials") {
