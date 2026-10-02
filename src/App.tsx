@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LoginForm } from './components/LoginForm/LoginForm';
 import { Sidebar } from './components/Sidebar/Sidebar';
 import { ChatWindow } from './components/ChatWindow/ChatWindow';
-import { getStateInstance } from './api/greenApi';
+import { getStateInstance, checkAccount } from './api/greenApi';
 import { useChatPolling } from './hooks/useChatPolling';
 import { useConversations } from './hooks/useConversations';
 import { useMessagesStorage } from './hooks/useMessagesStorage';
@@ -118,12 +118,17 @@ export default function App() {
     [activeChatId, messagesByChat],
   );
 
-  const handleAdd = (phone: string) => {
+  const handleAdd = async (phone: string) => {
     try {
-      const c = addOrGet(phone);
+      const res = await checkAccount(credentials!, phone);
+      if (!res.exist || !res.chatId) {
+        alert('На этом номере нет аккаунта MAX');
+        return;
+      }
+      const c = addOrGet(res.chatId, phone);
       setActiveChatId(c.chatId);
     } catch (e) {
-      alert(e instanceof Error ? e.message : 'Некорректный номер');
+      alert(e instanceof Error ? e.message : 'Ошибка проверки номера');
     }
   };
 
