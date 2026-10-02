@@ -24,7 +24,7 @@ export default function App() {
   const [credentials, setCredentials] = useState<Credentials | null>(() =>
     loadCredentials(),
   );
-  const [restoring, setRestoring] = useState(!!loadCredentials());
+  const [restoring, setRestoring] = useState<boolean>(() => !!loadCredentials());
 
   const { conversations, addOrGet, remove, touch, markRead } = useConversations();
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
@@ -36,13 +36,14 @@ export default function App() {
 
   // Восстановление сессии при перезагрузке
   useEffect(() => {
-    const saved = loadCredentials();
-    if (!saved) {
-      setRestoring(false);
-      return;
-    }
+    if (!restoring) return;
     let cancelled = false;
     (async () => {
+      const saved = loadCredentials();
+      if (!saved) {
+        if (!cancelled) setRestoring(false);
+        return;
+      }
       try {
         const state = (await getStateInstance(saved)) as InstanceState;
         if (cancelled) return;
@@ -64,7 +65,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [restoring]);
 
   // Сохранение/удаление credentials при изменении
   useEffect(() => {
