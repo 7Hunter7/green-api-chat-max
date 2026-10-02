@@ -10,6 +10,7 @@ export interface ChatMessage {
   timestamp: number;
   isOutgoing: boolean;
   status?: 'pending' | 'sent' | 'delivered' | 'read' | 'failed';
+  error?: string;
 }
 
 export interface GreenApiSendResponse {
@@ -58,5 +59,6 @@ export interface GreenApiNotification {
       wid: string;
       typeInstance: string;
     };
+    description?: string;
   };
 }

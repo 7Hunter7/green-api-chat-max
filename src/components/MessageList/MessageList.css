@@ -58,3 +58,10 @@
 .bubble__status--delivered { opacity: 0.85; }
 .bubble__status--read { color: #7dd3fc; }
 .bubble__status--failed { color: #ff6b6b; }
+
+.bubble__error {
+  margin-left: 4px;
+  color: #ff6b6b;
+  font-weight: 700;
+  cursor: help;
+}

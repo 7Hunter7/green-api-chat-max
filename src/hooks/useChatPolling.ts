@@ -62,6 +62,7 @@ export function useChatPolling({
             onStatusRef.current(
               body.idMessage,
               mapStatus(body.status),
+              body.description,
             );
           }
 
@@ -89,6 +90,7 @@ function mapStatus(raw: string): ChatMessage['status'] {
     case 'delivered':
     case 'read':
       return raw;
+    case 'failed':
     case 'noAccount':
     case 'notInGroup':
       return 'failed';

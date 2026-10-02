@@ -90,14 +90,14 @@ export default function App() {
   );
 
   const handleStatus = useCallback(
-    (idMessage: string, status: ChatMessage['status']) => {
+    (idMessage: string, status: ChatMessage['status'], description?: string) => {
       setMessagesByChat((prev) => {
         // Ищем во всех чатах — idMessage уникален
         const next: typeof prev = {};
         for (const [chatId, list] of Object.entries(prev)) {
           const has = list.some((m) => m.id === idMessage);
           next[chatId] = has
-            ? list.map((m) => (m.id === idMessage ? { ...m, status } : m))
+            ? list.map((m) => (m.id === idMessage ? { ...m, status, error: description } : m))
             : list;
         }
         return next;

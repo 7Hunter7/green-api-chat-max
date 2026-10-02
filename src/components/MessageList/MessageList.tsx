@@ -42,6 +42,9 @@ export function MessageList({ messages }: Props) {
                 {statusGlyph(m.status)}
               </span>
             )}
+            {m.isOutgoing && m.status === 'failed' && m.error && (
+              <span className="bubble__error" title={m.error}>!</span>
+            )}
           </div>
         </div>
       ))}
