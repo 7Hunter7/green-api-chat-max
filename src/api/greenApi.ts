@@ -108,3 +108,22 @@ export async function checkAccount(
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
 }
+
+export async function getSettings(c: Credentials) {
+  const res = await fetch(buildUrl(c, 'getSettings'));
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+export async function setSettings(
+  c: Credentials,
+  settings: Record<string, string | number>,
+) {
+  const res = await fetch(buildUrl(c, 'setSettings'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(settings),
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
