@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { sendMessage } from '../../api/greenApi';
+import { sendMessage, GreenApiError } from '../../api/greenApi';
 import { formatPhone } from '../../utils/chatId';
 import type { ChatMessage, Conversation, Credentials } from '../../types';
 import { MessageList } from '../MessageList/MessageList';
@@ -46,8 +46,21 @@ export function ChatWindow({
       onMessageConfirmed(localId, idMessage);
     } catch (e) {
       console.error('sendMessage failed:', e);
+      let errorMessage = 'Не удалось отправить сообщение';
+      
+      if (e instanceof GreenApiError && e.status === 466) {
+        errorMessage =
+          'Превышен лимит тарифа «Разработчик»: доступно только 3 чата в месяц. ' +
+          'Перейдите на тариф Business в личном кабинете GREEN-API.';
+      } else if (e instanceof GreenApiError && e.status === 403) {
+        errorMessage =
+          'Ваш аккаунт временно ограничен. Отправка возможна только на номера из контактов.';
+      } else if (e instanceof GreenApiError && e.status === 400) {
+        errorMessage = 'Некорректный запрос. Проверьте chatId и текст сообщения.';
+      }
+      
       onMessageFailed(localId);
-      alert('Не удалось отправить сообщение');
+      alert(errorMessage);
     } finally {
       setSending(false);
     }

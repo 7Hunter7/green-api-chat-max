@@ -22,6 +22,18 @@ export async function getStateInstance(c: Credentials): Promise<string> {
 }
 
 /** Отправка текстового сообщения */
+export class GreenApiError extends Error {
+  status: number;
+  body: unknown;
+
+  constructor(status: number, body: unknown, message?: string) {
+    super(message ?? `HTTP ${status}`);
+    this.name = 'GreenApiError';
+    this.status = status;
+    this.body = body;
+  }
+}
+
 export async function sendMessage(
   c: Credentials,
   chatId: string,
@@ -32,7 +44,16 @@ export async function sendMessage(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chatId, message }),
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+  if (!res.ok) {
+    let body: unknown = null;
+    try {
+      body = await res.json();
+    } catch {
+      // ignore
+    }
+    throw new GreenApiError(res.status, body);
+  }
   return res.json();
 }
 
