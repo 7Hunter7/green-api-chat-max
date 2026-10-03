@@ -1,0 +1,102 @@
+.input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: var(--background-tertiary);
+  color: var(--text-primary);
+  border: 1px solid transparent;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  position: relative;
+}
+
+.input:hover:not(.input--disabled) {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.input:focus-within:not(.input--disabled) {
+  border-color: var(--accent-primary);
+  background: var(--background-tertiary);
+}
+
+/* ============ Sizes ============ */
+.input--default {
+  height: 52px;
+  padding: var(--spacing-s-half) var(--spacing-m);
+  border-radius: var(--border-radius-common-l);
+}
+
+.input--compact {
+  height: 36px;
+  padding: 6px var(--spacing-s) 6px 12px;
+  border-radius: var(--border-radius-common-m);
+}
+
+/* ============ Field ============ */
+.input__field {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.input--compact .input__field {
+  font-size: 14px;
+}
+
+.input__field::placeholder {
+  color: var(--text-tertiary);
+}
+
+.input__field:disabled {
+  cursor: default;
+}
+
+/* ============ Slots ============ */
+.input__slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--icon-secondary);
+}
+
+.input__slot--left {
+  margin-right: var(--spacing-s);
+}
+
+.input__slot--right {
+  margin-left: var(--spacing-s);
+}
+
+/* ============ Clear button ============ */
+.input__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  margin-left: var(--spacing-s);
+  flex-shrink: 0;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.input__clear:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+}
+
+/* ============ Disabled ============ */
+.input--disabled {
+  opacity: 0.5;
+  cursor: default;
+}
