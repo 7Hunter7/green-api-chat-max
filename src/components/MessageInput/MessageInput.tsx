@@ -1,52 +1,114 @@
-import { useState } from 'react';
-import './MessageInput.css';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Button, Icon } from "../../ui";
+import "./MessageInput.css";
 
 interface Props {
   onSend: (text: string) => void;
   disabled?: boolean;
+  /** Максимальная высота textarea в строках (по умолчанию 8) */
+  maxRows?: number;
 }
 
-export function MessageInput({ onSend, disabled }: Props) {
-  const [text, setText] = useState('');
+export function MessageInput({ onSend, disabled = false, maxRows = 8 }: Props) {
+  const [text, setText] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const hasText = text.trim().length > 0;
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!text.trim()) return;
-    onSend(text.trim());
-    setText('');
-  };
+  // Автовысота
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    const lineHeight = 20; // из CSS
+    const maxHeight = lineHeight * maxRows;
+    el.style.height = `${Math.min(el.scrollHeight, maxHeight)}px`;
+    el.style.overflowY = el.scrollHeight > maxHeight ? "auto" : "hidden";
+  }, [text, maxRows]);
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  const submit = useCallback(() => {
+    const trimmed = text.trim();
+    if (!trimmed || disabled) return;
+    onSend(trimmed);
+    setText("");
+  }, [text, disabled, onSend]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
-      submit(e);
+      submit();
     }
   };
 
   return (
-    <form className="composer" onSubmit={submit}>
-      <textarea
-        className="composer__input"
-        placeholder="Сообщение"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={onKeyDown}
-        rows={1}
-        disabled={disabled}
-      />
-      <button
-        type="submit"
-        className="composer__send"
-        disabled={disabled || !text.trim()}
-        aria-label="Отправить"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M5.29 11.705a1 1 0 0 1 .005-1.415l6.015-5.97a1 1 0 0 1 1.41.001l5.987 5.972a1 1 0 0 1-1.412 1.416l-4.28-4.27v11.533a1 1 0 1 1-2 0V7.43l-4.31 4.279a1 1 0 0 1-1.414-.005"
-            fill="currentColor"
+    <div className="composer">
+      {/* Кнопка «прикрепить файл» */}
+      <div className="composer__action">
+        <Button
+          variant="ghost"
+          size="small"
+          icon={<Icon name="attachment" size={24} />}
+          aria-label="Загрузить файл"
+          disabled={disabled}
+        />
+      </div>
+
+      {/* Поле ввода с авторесайзом */}
+      <div className="composer__field">
+        <textarea
+          ref={textareaRef}
+          className="composer__textarea"
+          placeholder="Сообщение"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={handleKeyDown}
+          disabled={disabled}
+          rows={1}
+        />
+      </div>
+
+      {/* Правые экшены: если есть текст — «отправить», иначе — стикер/видео/микрофон */}
+      {hasText ? (
+        <div className="composer__action">
+          <Button
+            variant="primary"
+            size="small"
+            icon={<Icon name="send" size={20} />}
+            aria-label="Отправить"
+            onClick={submit}
+            disabled={disabled}
           />
-        </svg>
-      </button>
-    </form>
+        </div>
+      ) : (
+        <>
+          <div className="composer__action">
+            <Button
+              variant="ghost"
+              size="small"
+              icon={<Icon name="sticker" size={24} />}
+              aria-label="Открыть меню стикеров"
+              disabled={disabled}
+            />
+          </div>
+          <div className="composer__action">
+            <Button
+              variant="ghost"
+              size="small"
+              icon={<Icon name="video_message" size={24} />}
+              aria-label="Записать видеосообщение"
+              disabled={disabled}
+            />
+          </div>
+          <div className="composer__action">
+            <Button
+              variant="ghost"
+              size="small"
+              icon={<Icon name="microphone" size={24} />}
+              aria-label="Записать голосовое сообщение"
+              disabled={disabled}
+            />
+          </div>
+        </>
+      )}
+    </div>
   );
 }
