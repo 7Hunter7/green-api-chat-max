@@ -185,3 +185,7 @@
   font-size: 13px;
 }
 .sidebar__logout:hover { color: var(--text-primary); }
+
+.sidebar__search {
+  padding: 0 16px 12px;
+}

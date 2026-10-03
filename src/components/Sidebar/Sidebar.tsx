@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { Button, Icon, Input } from '../../ui';
 import type { Conversation } from '../../types';
 import { formatTime } from '../../utils/time';
 import './Sidebar.css';
@@ -22,7 +23,19 @@ export function Sidebar({
 }: Props) {
   const [newPhone, setNewPhone] = useState('');
   const [adding, setAdding] = useState(false);
+  const [search, setSearch] = useState('');
 
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return conversations;
+    return conversations.filter(
+      (c) =>
+        c.phone.toLowerCase().includes(q) ||
+        (c.lastMessage ?? '').toLowerCase().includes(q),
+    );
+  }, [conversations, search]);
+
+  
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const p = newPhone.trim();
@@ -36,32 +49,47 @@ export function Sidebar({
     <aside className="sidebar">
       <header className="sidebar__header">
         <h2 className="sidebar__title">Чаты</h2>
-        <button
-          className="sidebar__add"
-          onClick={() => setAdding((v) => !v)}
+        <Button
+          variant="primary"
+          size="small"
+          icon={<Icon name="plus" size={20} />}
           aria-label="Новый чат"
-        >
-          {adding ? '×' : '+'}
-        </button>
+          onClick={() => setAdding((v) => !v)}
+        />
       </header>
 
       {adding && (
         <form className="sidebar__new" onSubmit={submit}>
-          <input
+          <Input
             autoFocus
             placeholder="+7 999 123-45-67"
             value={newPhone}
             onChange={(e) => setNewPhone(e.target.value)}
           />
-          <button type="submit">Начать</button>
+          <Button type="submit" variant="primary" size="medium">
+            Начать
+          </Button>
         </form>
       )}
 
+      <div className="sidebar__search">
+        <Input
+          size="compact"
+          placeholder="Найти"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          clearable
+          leftSlot={<Icon name="search" size={16} />}
+        />
+      </div>
+
       <div className="sidebar__list">
-        {conversations.length === 0 && (
-          <div className="sidebar__empty">Нет чатов. Нажмите «+»</div>
+        {filtered.length === 0 && (
+          <div className="sidebar__empty">
+            {search ? 'Ничего не найдено' : 'Нет чатов. Нажмите «+»'}
+          </div>
         )}
-        {conversations.map((c) => {
+        {filtered.map((c) => {
           const active = c.chatId === activeChatId;
           return (
             <div
@@ -106,9 +134,15 @@ export function Sidebar({
       </div>
 
       <footer className="sidebar__footer">
-        <button className="sidebar__logout" onClick={onLogout}>
+        <Button
+          variant="secondary"
+          size="medium"
+          stretched
+          icon={<Icon name="autorization_leave" size={20} />}
+          onClick={onLogout}
+        >
           Выйти
-        </button>
+        </Button>
       </footer>
     </aside>
   );
