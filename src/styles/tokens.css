@@ -1,0 +1,150 @@
+:root {
+  /* ========== Fonts ========== */
+  --font: -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', system-ui,
+    Avenir, Helvetica, Arial, sans-serif;
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Размеры шрифтов */
+  --font-hero-size: 28px;
+  --font-hero-line-height: 32px;
+  --font-header-size: 24px;
+  --font-header-line-height: 28px;
+  --font-subheader-size: 20px;
+  --font-subheader-line-height: 24px;
+  --font-title-size: 17px;
+  --font-title-line-height: 24px;
+  --font-body-size: 16px;
+  --font-body-line-height: 20px;
+  --font-detail-size: 15px;
+  --font-detail-line-height: 20px;
+  --font-description-size: 14px;
+  --font-description-line-height: 18px;
+  --font-label-size: 12px;
+  --font-label-line-height: 16px;
+  --font-tag-size: 11px;
+  --font-tag-line-height: 14px;
+
+  /* Action fonts (кнопки) */
+  --font-action-large-size: 16px;
+  --font-action-large-line-height: 20px;
+  --font-action-large-weight: 500;
+  --font-action-large-letter-spacing: 0px;
+
+  --font-action-medium-size: 15px;
+  --font-action-medium-line-height: 20px;
+  --font-action-medium-weight: 500;
+  --font-action-medium-letter-spacing: 0px;
+
+  --font-action-small-size: 14px;
+  --font-action-small-line-height: 18px;
+  --font-action-small-weight: 500;
+  --font-action-small-letter-spacing: 0px;
+
+  /* ========== Colors — dark theme (space) ========== */
+  /* Backgrounds */
+  --background-primary: #17181c;
+  --background-secondary: #1e1f24;
+  --background-surface: #23252b;
+  --background-card: #1e1f24;
+  --background-tertiary: #ffffff0d;
+  --background-overlay: #0c0d0ecc;
+  --background-overlay-secondary: #00000099;
+
+  /* Text */
+  --text-primary: #ffffffeb;
+  --text-secondary: #ffffffa3;
+  --text-tertiary: #ffffff7a;
+  --text-mute: #ffffff52;
+  --text-primary-inverse: #060708;
+  --text-primary-inverse-static: #ffffff;
+  --text-themed: #6b5bd2;
+  --text-positive: #1abe43;
+  --text-negative: #ff303c;
+
+  /* Icons */
+  --icon-primary: #ffffffd6;
+  --icon-secondary: #ffffffa3;
+  --icon-tertiary: #ffffff7a;
+  --icon-mute: #ffffff47;
+  --icon-primary-inverse: #060708;
+  --icon-primary-inverse-static: #ffffff;
+  --icon-themed: #6b5bd2;
+  --icon-positive: #1abe43;
+  --icon-negative: #ff303c;
+
+  /* Accent */
+  --accent-primary: #6b5bd2;
+  --accent-primary-hover: #7a6bdd;
+  --accent-primary-pressed: #5f4fc4;
+  --accent-primary-fade: #6b5bd229;
+
+  /* Кнопки — токены */
+  --button-primary: #6b5bd2;
+  --button-primary-hover: #7a6bdd;
+  --button-primary-pressed: #5f4fc4;
+  --button-ghost: transparent;
+  --button-ghost-hover: #ffffff0d;
+  --button-ghost-pressed: #ffffff14;
+  --button-secondary: #ffffff14;
+  --button-secondary-hover: #ffffff1f;
+  --button-secondary-pressed: #ffffff29;
+
+  /* Состояния */
+  --states-button-primary-disabled: #6b5bd24d;
+  --states-button-ghost-disabled: transparent;
+  --states-text-primary-disabled: #ffffff52;
+  --states-icon-primary-disabled: #ffffff52;
+  --states-button-ghost-hover: #ffffff0d;
+  --states-button-ghost-pressed: #ffffff14;
+
+  /* Divider / stroke */
+  --divider-primary: #ffffff14;
+  --stroke-secondary: #ffffff14;
+  --stroke-tertiary: #ffffff0a;
+
+  /* Bubbles */
+  --bubble-in: #23252b;
+  --bubble-out: #6b5bd2;
+  --bubble-in-text: #ffffffeb;
+  --bubble-out-text: #ffffff;
+
+  /* Semantic */
+  --positive: #1abe43;
+  --negative: #ff303c;
+  --warning: #ffcc00;
+
+  /* ========== Radii ========== */
+  --border-radius-common-xs: 4px;
+  --border-radius-common-s: 8px;
+  --border-radius-common-m: 10px;
+  --border-radius-common-l: 14px;
+  --border-radius-common-xl: 18px;
+  --border-radius-common-xxl: 24px;
+  --border-radius-common-m-half: 5px;
+  --border-radius-round: 9999px;
+
+  /* ========== Spacing ========== */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+
+  /* ========== Shadow ========== */
+  --shadow-s: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-m: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-l: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  /* ========== Transitions ========== */
+  --transition-fast: 0.1s ease;
+  --transition-base: 0.15s ease;
+  --transition-slow: 0.25s ease;
+}
