@@ -1,15 +1,19 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { LoginForm } from './components/LoginForm/LoginForm';
-import { Sidebar } from './components/Sidebar/Sidebar';
-import { ChatWindow } from './components/ChatWindow/ChatWindow';
-import { getStateInstance, checkAccount } from './api/greenApi';
-import { useChatPolling } from './hooks/useChatPolling';
-import { useConversations } from './hooks/useConversations';
-import { useMessagesStorage } from './hooks/useMessagesStorage';
-import type { ChatMessage, Credentials, InstanceState } from './types';
-import './App.css';
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { LoginForm } from "./components/LoginForm/LoginForm";
+import { Sidebar } from "./components/Sidebar/Sidebar";
+import { ChatWindow } from "./components/ChatWindow/ChatWindow";
+import {
+  Navigation,
+  type NavigationSection,
+} from "./components/Navigation/Navigation";
+import { getStateInstance, checkAccount } from "./api/greenApi";
+import { useChatPolling } from "./hooks/useChatPolling";
+import { useConversations } from "./hooks/useConversations";
+import { useMessagesStorage } from "./hooks/useMessagesStorage";
+import type { ChatMessage, Credentials, InstanceState } from "./types";
+import "./App.css";
 
-const CREDENTIALS_KEY = 'green-api-chat-credentials';
+const CREDENTIALS_KEY = "green-api-chat-credentials";
 
 function loadCredentials(): Credentials | null {
   try {
@@ -24,9 +28,13 @@ export default function App() {
   const [credentials, setCredentials] = useState<Credentials | null>(() =>
     loadCredentials(),
   );
-  const [restoring, setRestoring] = useState<boolean>(() => !!loadCredentials());
+  const [restoring, setRestoring] = useState<boolean>(
+    () => !!loadCredentials(),
+  );
+  const [activeSection, setActiveSection] = useState<NavigationSection>("all");
 
-  const { conversations, addOrGet, remove, touch, markRead } = useConversations();
+  const { conversations, addOrGet, remove, touch, markRead } =
+    useConversations();
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const {
     messagesByChat,
@@ -47,7 +55,7 @@ export default function App() {
       try {
         const state = (await getStateInstance(saved)) as InstanceState;
         if (cancelled) return;
-        if (state === 'authorized') {
+        if (state === "authorized") {
           setCredentials(saved);
         } else {
           localStorage.removeItem(CREDENTIALS_KEY);
@@ -91,14 +99,20 @@ export default function App() {
   );
 
   const handleStatus = useCallback(
-    (idMessage: string, status: ChatMessage['status'], description?: string) => {
+    (
+      idMessage: string,
+      status: ChatMessage["status"],
+      description?: string,
+    ) => {
       setMessagesByChat((prev) => {
         // Ищем во всех чатах — idMessage уникален
         const next: typeof prev = {};
         for (const [chatId, list] of Object.entries(prev)) {
           const has = list.some((m) => m.id === idMessage);
           next[chatId] = has
-            ? list.map((m) => (m.id === idMessage ? { ...m, status, error: description } : m))
+            ? list.map((m) =>
+                m.id === idMessage ? { ...m, status, error: description } : m,
+              )
             : list;
         }
         return next;
@@ -115,7 +129,7 @@ export default function App() {
   });
 
   const activeMessages = useMemo(
-    () => (activeChatId ? messagesByChat[activeChatId] ?? [] : []),
+    () => (activeChatId ? (messagesByChat[activeChatId] ?? []) : []),
     [activeChatId, messagesByChat],
   );
 
@@ -123,13 +137,13 @@ export default function App() {
     try {
       const res = await checkAccount(credentials!, phone);
       if (!res.exist || !res.chatId) {
-        alert('На этом номере нет аккаунта MAX');
+        alert("На этом номере нет аккаунта MAX");
         return;
       }
       const c = addOrGet(res.chatId, phone);
       setActiveChatId(c.chatId);
     } catch (e) {
-      alert(e instanceof Error ? e.message : 'Ошибка проверки номера');
+      alert(e instanceof Error ? e.message : "Ошибка проверки номера");
     }
   };
 
@@ -151,6 +165,7 @@ export default function App() {
   const handleLogout = () => {
     setCredentials(null);
     setActiveChatId(null);
+    setActiveSection("all");
     clearAllMessages();
   };
 
@@ -204,6 +219,11 @@ export default function App() {
 
   return (
     <div className="app">
+      <Navigation
+        activeSection={activeSection}
+        onSelectSection={setActiveSection}
+        onLogout={handleLogout}
+      />
       <Sidebar
         conversations={conversations}
         activeChatId={activeChatId}

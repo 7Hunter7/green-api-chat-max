@@ -10,7 +10,6 @@ interface Props {
   onSelect: (chatId: string) => void;
   onAdd: (phone: string) => void | Promise<void>;
   onRemove: (chatId: string) => void;
-  onLogout: () => void;
 }
 
 export function Sidebar({
@@ -19,7 +18,6 @@ export function Sidebar({
   onSelect,
   onAdd,
   onRemove,
-  onLogout,
 }: Props) {
   const [newPhone, setNewPhone] = useState('');
   const [adding, setAdding] = useState(false);
@@ -143,18 +141,6 @@ export function Sidebar({
           );
         })}
       </div>
-
-      <footer className="sidebar__footer">
-        <Button
-          variant="secondary"
-          size="medium"
-          stretched
-          icon={<Icon name="autorization_leave" size={20} />}
-          onClick={onLogout}
-        >
-          Выйти
-        </Button>
-      </footer>
     </aside>
   );
 }
