@@ -1,0 +1,35 @@
+.navigation {
+  grid-area: navigation;
+  width: 76px;
+  min-width: 76px;
+  background: var(--background-primary);
+  border-right: 1px solid var(--divider-secondary);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-bottom: var(--spacing-l);
+  z-index: 1;
+}
+
+.navigation__folders {
+  padding: 0 var(--spacing-xs);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.navigation__separator {
+  height: 1px;
+  margin: 0 var(--spacing-s);
+  background: var(--divider-primary);
+}
+
+.navigation__bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-s);
+  margin-top: var(--spacing-m);
+  padding: 0 var(--spacing-xs);
+  flex: 1;
+}
