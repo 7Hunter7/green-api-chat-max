@@ -20,6 +20,18 @@
 }
 
 /* ============ Sizes ============ */
+.button--xsmall {
+  min-width: 32px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: var(--border-radius-common-xl);
+  font-size: var(--font-action-small-size);
+  line-height: var(--font-action-small-line-height);
+  font-weight: var(--font-action-small-weight);
+  letter-spacing: var(--font-action-small-letter-spacing);
+}
+
 .button--small {
   min-width: 40px;
   height: 40px;
