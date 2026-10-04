@@ -1,0 +1,90 @@
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-s);
+  padding: var(--spacing-m) var(--spacing-l);
+  background: var(--background-primary);
+  border-bottom: 1px solid var(--divider-primary);
+  min-width: 0;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.chat-header .button--small {
+  min-width: 40px;
+  width: 40px;
+  height: 40px;
+}
+
+/* Кликабельный блок «аватар + имя + подзаголовок» */
+.chat-header__main {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: var(--spacing-m);
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  border-radius: var(--border-radius-common-m);
+  transition: background var(--transition-base);
+}
+
+.chat-header__main:hover {
+  background: var(--button-ghost-hover);
+}
+
+.chat-header__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--border-radius-round);
+  background: var(--accent-primary);
+  color: var(--text-primary-inverse-static);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-description-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* Контент: имя + подзаголовок */
+.chat-header__content {
+  display: grid;
+  grid-template-rows: 20px 20px;
+  align-items: center;
+  min-width: 0;
+  flex: 1;
+}
+
+.chat-header__name {
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line-height);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-header__subtitle {
+  font-size: var(--font-description-size);
+  line-height: var(--font-description-line-height);
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+  min-width: 40px;
+}
