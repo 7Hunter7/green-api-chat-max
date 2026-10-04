@@ -8,35 +8,40 @@ interface Props {
   onBack?: () => void;
   onSearch?: () => void;
   onMore?: () => void;
+  onProfileClick?: () => void;
 }
+
+const noop = () => {};
 
 export function ChatHeader({
   conversation,
-  onBack,
-  onSearch,
-  onMore,
+  onBack = noop,
+  onSearch = noop,
+  onMore = noop,
+  onProfileClick = noop,
 }: Props) {
   const phone = conversation.phone;
   const avatarText = phone.replace(/\D/g, '').slice(-2) || '??';
 
   return (
-    <header className="chat-header">
-      {onBack && (
-        <Button
-          variant="ghost"
-          size="small"
-          aria-label="Назад"
-          onClick={onBack}
-          icon={<Icon name="arrow_left" size={24} />}
-        />
-      )}
+    <header className="chat-header" role="banner">
+      <Button
+        variant="ghost"
+        size="small"
+        aria-label="Назад"
+        onClick={onBack}
+        icon={<Icon name="arrow_left" size={24} />}
+      />
 
       <button
         type="button"
         className="chat-header__main"
         aria-label={`Открыть профиль ${formatPhone(phone)}`}
+        onClick={onProfileClick}
       >
-        <div className="chat-header__avatar">{avatarText}</div>
+        <div className="chat-header__avatar" aria-hidden="true">
+          {avatarText}
+        </div>
         <div className="chat-header__content">
           <span className="chat-header__name">{formatPhone(phone)}</span>
           <span className="chat-header__subtitle">Личный чат</span>
@@ -44,24 +49,22 @@ export function ChatHeader({
       </button>
 
       <div className="chat-header__actions">
-        {onSearch && (
-          <Button
-            variant="ghost"
-            size="small"
-            aria-label="Поиск сообщений"
-            onClick={onSearch}
-            icon={<Icon name="search" size={24} />}
-          />
-        )}
-        {onMore && (
-          <Button
-            variant="ghost"
-            size="small"
-            aria-label="Ещё"
-            onClick={onMore}
-            icon={<Icon name="dots_vertical" size={24} />}
-          />
-        )}
+        <Button
+          variant="ghost"
+          size="small"
+          aria-label="Поиск сообщений"
+          onClick={onSearch}
+          icon={<Icon name="search" size={24} />}
+        />
+        <Button
+          variant="ghost"
+          size="small"
+          aria-label="Ещё"
+          aria-haspopup="dialog"
+          aria-expanded={false}
+          onClick={onMore}
+          icon={<Icon name="dots_vertical" size={24} />}
+        />
       </div>
     </header>
   );

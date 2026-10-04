@@ -4,16 +4,10 @@
   gap: var(--spacing-s);
   padding: var(--spacing-m) var(--spacing-l);
   background: var(--background-primary);
-  border-bottom: 1px solid var(--divider-primary);
+  border-bottom: 1px solid var(--divider-secondary);
   min-width: 0;
   flex-shrink: 0;
   position: relative;
-}
-
-.chat-header .button--small {
-  min-width: 40px;
-  width: 40px;
-  height: 40px;
 }
 
 /* Кликабельный блок «аватар + имя + подзаголовок» */
@@ -46,11 +40,13 @@
   color: var(--text-primary-inverse-static);
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-description-size);
+  line-height: var(--font-description-line-height);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
+  user-select: none;
 }
 
 /* Контент: имя + подзаголовок */
@@ -75,6 +71,7 @@
 .chat-header__subtitle {
   font-size: var(--font-description-size);
   line-height: var(--font-description-line-height);
+  font-weight: var(--font-weight-regular);
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;

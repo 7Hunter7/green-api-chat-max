@@ -21,10 +21,10 @@
 
 /* ============ Sizes ============ */
 .button--small {
-  min-width: 48px;
+  min-width: 40px;
   height: 40px;
   padding: 10px 12px;
-  border-radius: var(--border-radius-common-m-half);
+  border-radius: var(--border-radius-common-s);
   font-size: var(--font-action-small-size);
   line-height: var(--font-action-small-line-height);
   font-weight: var(--font-action-small-weight);
