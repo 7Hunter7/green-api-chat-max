@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { sendMessage, GreenApiError } from '../../api/greenApi';
-import { formatPhone } from '../../utils/chatId';
 import type { ChatMessage, Conversation, Credentials } from '../../types';
+import { ChatHeader } from '../ChatHeader/ChatHeader';
 import { MessageList } from '../MessageList/MessageList';
 import { MessageInput } from '../MessageInput/MessageInput';
 import './ChatWindow.css';
@@ -66,19 +66,9 @@ export function ChatWindow({
     }
   };
 
-  const phone = conversation.phone;
-  const avatarText = phone.replace(/\D/g, '').slice(-2) || '??';
-
   return (
     <div className="chat-window">
-      <header className="chat-header">
-        <div className="chat-header__avatar">{avatarText}</div>
-        <div className="chat-header__info">
-          <div className="chat-header__name">{formatPhone(phone)}</div>
-          <div className="chat-header__status">личный чат</div>
-        </div>
-      </header>
-
+      <ChatHeader conversation={conversation} />
       <MessageList messages={messages} />
 
       <MessageInput onSend={handleSend} disabled={sending} />
