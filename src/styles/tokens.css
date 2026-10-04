@@ -19,10 +19,13 @@
   --font-title-line-height: 24px;
   --font-body-size: 16px;
   --font-body-line-height: 20px;
+  --font-body-letter-spacing: 0.15px;
   --font-detail-size: 15px;
   --font-detail-line-height: 20px;
+  --font-detail-letter-spacing: 0.15px;
   --font-description-size: 13px;
   --font-description-line-height: 16px;
+  --font-description-letter-spacing: 0.2px;
   --font-label-size: 12px;
   --font-label-line-height: 16px;
   --font-tag-size: 11px;
@@ -105,6 +108,8 @@
   --states-button-ghost-pressed: #ffffff14;
   --states-text-primary-disabled: #ffffff52;
   --states-icon-primary-disabled: #ffffff52;
+  --states-background-card-hover: #32343d;
+  --states-background-card-selected: #2c2d37;
 
   /* Divider / stroke */
   --divider-primary: #ffffff14;
@@ -189,7 +194,8 @@
   --button-ghost-pressed: #0d0d0d14;
   --states-button-ghost-hover: #0d0d0d0a;
   --states-button-ghost-pressed: #0d0d0d14;
-  --states-icon-primary-disabled: #6f7276a3;
-
   --states-text-primary-disabled: #6f7276a3;
+  --states-icon-primary-disabled: #6f7276a3;
+  --states-background-card-hover: #f6f6f6;
+  --states-background-card-selected: #007aff14;
 }

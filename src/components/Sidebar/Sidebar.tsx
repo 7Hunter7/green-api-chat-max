@@ -93,40 +93,52 @@ export function Sidebar({
           return (
             <div
               key={c.chatId}
-              className={`chat-item ${active ? 'chat-item--active' : ''}`}
-              onClick={() => onSelect(c.chatId)}
-            >
-              <div className="chat-item__avatar">
-                {c.phone.slice(-2)}
-              </div>
-              <div className="chat-item__body">
-                <div className="chat-item__row">
+              className="chat-item">
+              <button
+                type="button"
+                className={`chat-item__cell${active ? " chat-item__cell--selected" : ""}`}
+                onClick={() => onSelect(c.chatId)}
+              >
+                <div className="chat-item__avatar">{c.phone.slice(-2)}</div>
+
+                <h3 className="chat-item__title">
                   <span className="chat-item__name">{c.phone}</span>
+                </h3>
+
+                <span className="chat-item__text">
+                  {c.lastMessage ?? "Нет сообщений"}
+                </span>
+
+                <div className="chat-item__meta">
                   {c.lastTimestamp && (
                     <span className="chat-item__time">
                       {formatTime(c.lastTimestamp)}
                     </span>
                   )}
                 </div>
-                <div className="chat-item__row">
-                  <span className="chat-item__preview">
-                    {c.lastMessage ?? 'Нет сообщений'}
-                  </span>
+
+                <div className="chat-item__indicators">
                   {c.unreadCount > 0 && (
                     <span className="chat-item__badge">{c.unreadCount}</span>
                   )}
                 </div>
-              </div>
-              <button
-                className="chat-item__remove"
-                aria-label="Удалить чат"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onRemove(c.chatId);
-                }}
-              >
-                ×
               </button>
+
+              <div className="chat-item__actions">
+                <button
+                  type="button"
+                  className="chat-item__menu-button"
+                  aria-label="Еще"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (confirm("Удалить этот чат?")) {
+                      onRemove(c.chatId);
+                    }
+                  }}
+                >
+                  <Icon name="dots_horizontal_mini" size={16} />
+                </button>
+              </div>
             </div>
           );
         })}
