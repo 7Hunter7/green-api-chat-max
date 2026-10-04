@@ -21,8 +21,8 @@
   --font-body-line-height: 20px;
   --font-detail-size: 15px;
   --font-detail-line-height: 20px;
-  --font-description-size: 14px;
-  --font-description-line-height: 18px;
+  --font-description-size: 13px;
+  --font-description-line-height: 16px;
   --font-label-size: 12px;
   --font-label-line-height: 16px;
   --font-tag-size: 11px;
@@ -43,6 +43,10 @@
   --font-action-small-line-height: 18px;
   --font-action-small-weight: 500;
   --font-action-small-letter-spacing: 0px;
+
+  /* ========== Размеры ========== */
+  --size-18: 18px;
+  --size-40: 40px;
 
   /* ========== Colors — dark theme (space) ========== */
   /* Backgrounds */
@@ -97,13 +101,14 @@
   /* Состояния */
   --states-button-primary-disabled: #6b5bd24d;
   --states-button-ghost-disabled: transparent;
-  --states-text-primary-disabled: #ffffff52;
-  --states-icon-primary-disabled: #ffffff52;
   --states-button-ghost-hover: #ffffff0d;
   --states-button-ghost-pressed: #ffffff14;
+  --states-text-primary-disabled: #ffffff52;
+  --states-icon-primary-disabled: #ffffff52;
 
   /* Divider / stroke */
   --divider-primary: #ffffff14;
+  --divider-secondary: #ffffff0f;
   --stroke-secondary: #ffffff14;
   --stroke-tertiary: #ffffff0a;
 
@@ -122,19 +127,21 @@
   --border-radius-common-xs: 4px;
   --border-radius-common-s: 8px;
   --border-radius-common-m: 10px;
+  --border-radius-common-m-half: 5px;
   --border-radius-common-l: 14px;
   --border-radius-common-xl: 18px;
   --border-radius-common-xxl: 24px;
-  --border-radius-common-m-half: 5px;
+  --border-radius-common-4xl: 48px;  /* для аватаров */
   --border-radius-round: 9999px;
 
   /* ========== Spacing ========== */
   --spacing-xxs: 2px;
   --spacing-xs: 4px;
+  --spacing-s-half: 6px;
   --spacing-s: 8px;
-  --spacing-s-half: 10px;
-  --spacing-m: 16px;
-  --spacing-l: 20px;
+  --spacing-m-half: 10px;
+  --spacing-m: 12px;
+  --spacing-l: 16px;
   --spacing-xl: 24px;
   --spacing-xxl: 32px;
 
@@ -147,4 +154,42 @@
   --transition-fast: 0.1s ease;
   --transition-base: 0.15s ease;
   --transition-slow: 0.25s ease;
+}
+
+/* ========== Light theme (space) ========== */
+/* Важно: в этом блоке — только переопределения, которые отличаются от тёмной. Базовые значения остаются из :root */
+:root:where([data-color-theme='space'][data-color-scheme='light']),
+[data-color-theme='space'][data-color-scheme='light'] {
+  --background-primary: #fff;
+  --background-secondary: #f5f7fa;
+  --background-surface: #edeef2;
+  --background-card: #fff;
+  --background-tertiary: #0909090d;
+  --background-overlay: #0c0d0e52;
+  --background-overlay-secondary: #0009;
+
+  --text-primary: #060708;
+  --text-secondary: #060708ad;
+  --text-tertiary: #06070885;
+  --text-mute: #06070866;
+  --text-primary-inverse: #fff;
+  --text-primary-inverse-static: #fff;
+
+  --icon-primary: #060708d6;
+  --icon-secondary: #060708a3;
+  --icon-tertiary: #0607087a;
+  --icon-mute: #06070847;
+
+  --divider-primary: #0c0d0e29;
+  --divider-secondary: #0c0d0e0f;
+  --stroke-secondary: #0c0d0e85;
+  --stroke-tertiary: #9da4ac4d;
+
+  --button-ghost-hover: #0d0d0d0a;
+  --button-ghost-pressed: #0d0d0d14;
+  --states-button-ghost-hover: #0d0d0d0a;
+  --states-button-ghost-pressed: #0d0d0d14;
+  --states-icon-primary-disabled: #6f7276a3;
+
+  --states-text-primary-disabled: #6f7276a3;
 }
