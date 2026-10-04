@@ -24,7 +24,9 @@
 
 /* Форма добавления чата */
 .sidebar__new {
+  width: 100%;
   display: flex;
+  justify-content: space-evenly;
   gap: var(--spacing-s);
   padding: 0 var(--spacing-l) var(--spacing-m);
 }
