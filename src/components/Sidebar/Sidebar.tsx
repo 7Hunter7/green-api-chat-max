@@ -35,7 +35,6 @@ export function Sidebar({
     );
   }, [conversations, search]);
 
-  
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const p = newPhone.trim();
@@ -51,7 +50,7 @@ export function Sidebar({
         <h2 className="sidebar__title">Чаты</h2>
         <Button
           variant="primary"
-          size="small"
+          size="xsmall"
           icon={<Icon name="plus" size={20} />}
           aria-label="Новый чат"
           onClick={() => setAdding((v) => !v)}
