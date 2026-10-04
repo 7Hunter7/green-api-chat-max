@@ -25,6 +25,9 @@ export function ChatHeader({
 
   return (
     <header className="chat-header" role="banner">
+      <h2 className="sr-only" id="chat-header-title">
+        Окно чата с {formatPhone(phone)}
+      </h2>
       <Button
         variant="ghost"
         size="small"

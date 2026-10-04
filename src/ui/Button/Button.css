@@ -23,12 +23,24 @@
 .button--small {
   min-width: 40px;
   height: 40px;
-  padding: 10px 12px;
-  border-radius: var(--border-radius-common-s);
+  padding: 0;
+  border-radius: var(--border-radius-common-xl);
   font-size: var(--font-action-small-size);
   line-height: var(--font-action-small-line-height);
   font-weight: var(--font-action-small-weight);
   letter-spacing: var(--font-action-small-letter-spacing);
+}
+
+/* Кнопка с текстом */
+.button--small:has(.button__text) {
+  padding: 10px 12px;
+}
+
+/* Кнопка с иконкой */
+.button--small:has(.button__icon:only-child) {
+  width: 40px;
+  min-width: 40px;
+  aspect-ratio: 1 / 1;
 }
 
 .button--medium {
@@ -139,9 +151,3 @@
   }
 }
 
-/* ============ Icon-only (авто-форма) ============ */
-.button:has(.button__icon:only-child) {
-  padding-left: 0;
-  padding-right: 0;
-  aspect-ratio: 1 / 1;
-}
