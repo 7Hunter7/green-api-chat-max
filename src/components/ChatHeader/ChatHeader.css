@@ -85,3 +85,51 @@
   flex-shrink: 0;
   min-width: 40px;
 }
+
+/*  Панель поиска по чату */
+.chat-header__search {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease,
+    visibility 0s linear 0.3s;
+  background: var(--background-primary);
+  border-bottom: 1px solid var(--divider-secondary);
+}
+
+.chat-header__search--open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease,
+    visibility 0s;
+}
+
+/* Внутренняя раскладка: инпут + кнопка «Закрыть» */
+.chat-header__search-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-m);
+  padding: var(--spacing-m-half) var(--spacing-m);
+}
+
+.chat-header__search-inner > .chat-header__search-input {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-header__search-input {
+  height: 40px;
+  border-radius: var(--border-radius-common-m);
+}
