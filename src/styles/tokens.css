@@ -66,8 +66,10 @@
   --text-secondary: #ffffffa3;
   --text-tertiary: #ffffff7a;
   --text-mute: #ffffff52;
+  --text-mute-inverse-static: #ffffff6b;
   --text-primary-inverse: #060708;
   --text-primary-inverse-static: #ffffff;
+  --text-secondary-inverse-static: #ffffffcc;
   --text-themed: #6b5bd2;
   --text-positive: #1abe43;
   --text-negative: #ff303c;
@@ -141,7 +143,7 @@
   --border-radius-round: 9999px;
 
   /* ========== Spacing ========== */
-  --spacing-xxs: 2px;
+  --spacing-2xs: 2px;
   --spacing-xs: 4px;
   --spacing-s-half: 6px;
   --spacing-s: 8px;
@@ -179,8 +181,10 @@
   --text-secondary: #060708ad;
   --text-tertiary: #06070885;
   --text-mute: #06070866;
+  --text-mute-inverse-static: #ffffff6b;
   --text-primary-inverse: #fff;
   --text-primary-inverse-static: #fff;
+  --text-secondary-inverse-static: #ffffffcc;
 
   --icon-primary: #060708d6;
   --icon-secondary: #060708a3;
