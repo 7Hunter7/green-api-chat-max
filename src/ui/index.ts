@@ -9,3 +9,8 @@ export type { InputProps, InputSize } from './Input/Input';
 
 export { NavButton } from './NavButton/NavButton';
 export type { NavButtonProps } from './NavButton/NavButton';
+
+export { Menu } from './Menu/Menu';
+export type { MenuProps } from './Menu/Menu';
+export { MenuItem } from './Menu/MenuItem';
+export type { MenuItemProps } from './Menu/MenuItem';
