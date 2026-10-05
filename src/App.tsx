@@ -271,6 +271,7 @@ export default function App() {
             onMessageSent={handleMessageSent}
             onMessageConfirmed={handleMessageConfirmed}
             onMessageFailed={handleMessageFailed}
+            onBack={() => setActiveChatId(null)}
           />
         ) : (
           <div className="app__placeholder">

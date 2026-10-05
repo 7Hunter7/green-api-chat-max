@@ -14,6 +14,7 @@ interface Props {
   onMessageSent: (msg: ChatMessage) => void;
   onMessageConfirmed: (localId: string, serverId: string) => void;
   onMessageFailed: (localId: string) => void;
+  onBack: () => void;
 }
 
 export function ChatWindow({
@@ -24,6 +25,7 @@ export function ChatWindow({
   onMessageSent,
   onMessageConfirmed,
   onMessageFailed,
+  onBack,
 }: Props) {
   const [sending, setSending] = useState(false);
 
@@ -68,7 +70,10 @@ export function ChatWindow({
 
   return (
     <div className="chat-window">
-      <ChatHeader conversation={conversation} />
+      <ChatHeader 
+        conversation={conversation} 
+        onBack={onBack} 
+      />
       <MessageList messages={messages} />
 
       <MessageInput onSend={handleSend} disabled={sending} />
