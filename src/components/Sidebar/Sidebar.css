@@ -141,6 +141,12 @@
   gap: var(--spacing-xs);
   margin-left: var(--spacing-m);
   height: 100%;
+  transition: opacity var(--transition-fast);
+}
+
+.chat-item:hover .chat-item__meta {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .chat-item__time {
@@ -186,6 +192,7 @@
   opacity: 0;
   transition: opacity var(--transition-base);
   pointer-events: none;
+  z-index: 1;
 }
 
 .chat-item:hover .chat-item__actions {
