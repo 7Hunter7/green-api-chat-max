@@ -67,3 +67,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.menu__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

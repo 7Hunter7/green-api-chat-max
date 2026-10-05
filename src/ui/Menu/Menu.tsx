@@ -1,9 +1,6 @@
 import {
-  cloneElement,
-  isValidElement,
   useCallback,
   useEffect,
-  useRef,
   useState,
   type ReactElement,
   type ReactNode,
@@ -13,7 +10,7 @@ import "./Menu.css";
 
 export interface MenuProps {
   /** Триггер — любой кликабельный элемент (обычно Button) */
-  trigger: ReactElement<{ onClick?: (e: React.MouseEvent) => void }>;
+  trigger: ReactElement;
   /** Пункты меню (MenuItem) */
   children: ReactNode;
   /** Выравнивание меню относительно триггера */
@@ -35,11 +32,13 @@ export function Menu({
 }: MenuProps) {
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<Position | null>(null);
-  const triggerRef = useRef<HTMLElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [triggerEl, setTriggerEl] = useState<HTMLElement | null>(null);
+  const [menuEl, setMenuEl] = useState<HTMLDivElement | null>(null);
 
-  // Клик по триггеру — открыть/закрыть
-  const handleTriggerClick = useCallback((e: React.MouseEvent) => {
+  // Ссылка на актуальный "закрыть" — используется в слушателях
+  const close = useCallback(() => setOpen(false), []);
+
+  const toggle = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     setOpen((v) => !v);
   }, []);
@@ -50,16 +49,13 @@ export function Menu({
 
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Node;
-      if (
-        !menuRef.current?.contains(target) &&
-        !triggerRef.current?.contains(target)
-      ) {
-        setOpen(false);
+      if (!menuEl?.contains(target) && !triggerEl?.contains(target)) {
+        close();
       }
     };
 
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") close();
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -68,20 +64,20 @@ export function Menu({
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [open]);
+  }, [open, menuEl, triggerEl, close]);
 
   // Расчёт позиции при открытии и при ресайзе/скролле
   useEffect(() => {
-    if (!open || !triggerRef.current) return;
+    if (!open || !triggerEl) return;
 
     const updatePosition = () => {
-      const rect = triggerRef.current!.getBoundingClientRect();
-      const menuRect = menuRef.current?.getBoundingClientRect();
+      const rect = triggerEl.getBoundingClientRect();
+      const menuRect = menuEl?.getBoundingClientRect();
 
       let left: number;
       if (align === "end") {
         // Правый край меню = правый край триггера
-        const menuWidth = menuRect?.width ?? 0;
+        const menuWidth = menuRect?.width ?? 240;
         left = rect.right - menuWidth;
       } else {
         left = rect.left;
@@ -110,29 +106,31 @@ export function Menu({
       window.removeEventListener("resize", updatePosition);
       window.removeEventListener("scroll", updatePosition, true);
     };
-  }, [open, align, offset]);
-
-  // Клонируем триггер, чтобы повесить ref и onClick
-  const triggerWithProps = isValidElement(trigger)
-    ? cloneElement(trigger, {
-        ref: triggerRef,
-        onClick: handleTriggerClick,
-        "aria-haspopup": "menu",
-        "aria-expanded": open,
-      } as Record<string, unknown>)
-    : trigger;
+  }, [open, align, offset, triggerEl, menuEl]);
 
   return (
     <>
-      {triggerWithProps}
+      <span
+        ref={setTriggerEl}
+        className="menu__trigger"
+        onClick={toggle}
+        aria-haspopup="menu"
+        aria-expanded={open}
+      >
+        {trigger}
+      </span>
+
       {open &&
-        position &&
         createPortal(
           <div
-            ref={menuRef}
+            ref={setMenuEl}
             className="menu"
             role="menu"
-            style={{ top: position.top, left: position.left }}
+            style={
+              position
+                ? { top: position.top, left: position.left }
+                : { visibility: "hidden", position: "fixed", top: 0, left: 0 }
+            }
           >
             {children}
           </div>,
