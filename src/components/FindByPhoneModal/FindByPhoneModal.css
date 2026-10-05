@@ -1,0 +1,24 @@
+.find-by-phone__input {
+  background: var(--background-card);
+}
+
+.find-by-phone__input:hover:not(.input--disabled) {
+  background: var(--background-card);
+}
+
+.find-by-phone__input:focus-within:not(.input--disabled) {
+  background: var(--background-card);
+}
+
+.find-by-phone__prefix {
+  display: inline-flex;
+  align-items: center;
+  padding-right: var(--spacing-s);
+  margin-right: var(--spacing-s);
+  border-right: 1px solid var(--divider-secondary);
+  color: var(--text-primary);
+  font-size: var(--font-detail-size);
+  line-height: var(--font-detail-line-height);
+  user-select: none;
+  white-space: nowrap;
+}
