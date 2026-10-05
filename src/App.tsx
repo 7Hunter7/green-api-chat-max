@@ -33,13 +33,21 @@ export default function App() {
   );
   const [activeSection, setActiveSection] = useState<NavigationSection>("all");
 
-  const { conversations, addOrGet, remove, touch, markRead } =
-    useConversations();
+  const {
+    conversations,
+    addOrGet,
+    remove,
+    touch,
+    markRead,
+    markUnread,
+    clearPreview,
+  } = useConversations();
+
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const {
     messagesByChat,
     setMessagesByChat,
-    clearAll: clearAllMessages,
+    // clearAll: clearAllMessages,
   } = useMessagesStorage();
 
   // Восстановление сессии при перезагрузке
@@ -200,6 +208,26 @@ export default function App() {
     }));
   };
 
+  // Очистить переписку чата (без удаления)
+  const handleClearHistory = (chatId: string) => {
+    // Очищаем сообщения
+    setMessagesByChat((prev) => {
+      const next = { ...prev };
+      delete next[chatId];
+      return next;
+    });
+    // Очищаем превью в списке чатов
+    clearPreview(chatId);
+  };
+
+  // Пометить чат непрочитанным
+  const handleMarkUnread = (chatId: string) => {
+    // Если чат открыт — закрываем
+    if (activeChatId === chatId) setActiveChatId(null);
+    // Ставим badge через markUnread из useConversations
+    markUnread(chatId);
+  };
+
   const activeConversation = useMemo(
     () => conversations.find((c) => c.chatId === activeChatId),
     [conversations, activeChatId],
@@ -229,6 +257,8 @@ export default function App() {
         onSelect={handleSelect}
         onAdd={handleAdd}
         onRemove={handleRemove}
+        onClearHistory={handleClearHistory}
+        onMarkUnread={handleMarkUnread}
       />
       <main className="app__main">
         {activeChatId && activeConversation ? (

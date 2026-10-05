@@ -11,6 +11,8 @@ interface Props {
   onSelect: (chatId: string) => void;
   onAdd: (phone: string) => void | Promise<void>;
   onRemove: (chatId: string) => void;
+  onClearHistory?: (chatId: string) => void;
+  onMarkUnread?: (chatId: string) => void;
 }
 
 export function Sidebar({
@@ -19,6 +21,8 @@ export function Sidebar({
   onSelect,
   onAdd,
   onRemove,
+  onClearHistory,
+  onMarkUnread,
 }: Props) {
   const [findModalOpen, setFindModalOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -156,19 +160,139 @@ export function Sidebar({
               </button>
 
               <div className="chat-item__actions">
-                <button
-                  type="button"
-                  className="chat-item__menu-button"
-                  aria-label="Еще"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (confirm("Удалить этот чат?")) {
-                      onRemove(c.chatId);
-                    }
-                  }}
+                <Menu
+                  align="end"
+                  trigger={
+                    <button
+                      type="button"
+                      className="chat-item__menu-button"
+                      aria-label="Еще"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Icon name="dots_horizontal_mini" size={16} />
+                    </button>
+                  }
                 >
-                  <Icon name="dots_horizontal_mini" size={16} />
-                </button>
+                  <MenuItem
+                    icon={<Icon name="folder_add_to" size={20} />}
+                    submenu={[
+                      {
+                        icon: <Icon name="folder" size={20} />,
+                        children: "Новые",
+                        onClick: () =>
+                          alert("Добавлено в «Новые» — в разработке"),
+                      },
+                      {
+                        icon: <Icon name="folder" size={20} />,
+                        children: "Каналы",
+                        onClick: () =>
+                          alert("Добавлено в «Каналы» — в разработке"),
+                      },
+                      {
+                        icon: <Icon name="plus" size={20} />,
+                        children: "Создать папку",
+                        onClick: () => alert("Создать папку — в разработке"),
+                      },
+                    ]}
+                  >
+                    Добавить в папку
+                  </MenuItem>
+
+                  <MenuItem
+                    icon={<Icon name="launch" size={20} />}
+                    onClick={() => onSelect(c.chatId)}
+                  >
+                    Открыть
+                  </MenuItem>
+
+                  <MenuItem
+                    icon={<Icon name="message_unread" size={20} />}
+                    onClick={() => onMarkUnread?.(c.chatId)}
+                  >
+                    Отметить непрочитанным
+                  </MenuItem>
+
+                  <MenuItem
+                    icon={<Icon name="notifications_crossed" size={20} />}
+                    submenu={[
+                      {
+                        children: "На 1 час",
+                        onClick: () =>
+                          alert(
+                            "Уведомления отключены на 1 час — в разработке",
+                          ),
+                      },
+                      {
+                        children: "На 4 часа",
+                        onClick: () =>
+                          alert(
+                            "Уведомления отключены на 4 часа — в разработке",
+                          ),
+                      },
+                      {
+                        children: "На 1 день",
+                        onClick: () =>
+                          alert(
+                            "Уведомления отключены на 1 день — в разработке",
+                          ),
+                      },
+                      {
+                        children: "Навсегда",
+                        danger: true,
+                        onClick: () =>
+                          alert(
+                            "Уведомления отключены навсегда — в разработке",
+                          ),
+                      },
+                    ]}
+                  >
+                    Отключить уведомления
+                  </MenuItem>
+
+                  <MenuItem
+                    icon={<Icon name="clear_history" size={20} />}
+                    onClick={() => {
+                      if (confirm("Стереть переписку в этом чате?")) {
+                        onClearHistory?.(c.chatId);
+                      }
+                    }}
+                  >
+                    Стереть переписку
+                  </MenuItem>
+
+                  <MenuItem
+                    icon={<Icon name="eye_crossed" size={20} />}
+                    onClick={() =>
+                      alert("Скрыть истории автора — в разработке")
+                    }
+                  >
+                    Скрыть истории автора
+                  </MenuItem>
+
+                  <MenuItem
+                    icon={<Icon name="block" size={20} />}
+                    danger
+                    onClick={() => {
+                      if (confirm("Заблокировать пользователя?")) {
+                        alert("Заблокировать — в разработке");
+                      }
+                    }}
+                  >
+                    Заблокировать
+                  </MenuItem>
+
+                  <MenuItem
+                    icon={<Icon name="delete" size={20} />}
+                    danger
+                    onClick={() => {
+                      if (confirm("Удалить чат?")) {
+                        onRemove(c.chatId);
+                      }
+                    }}
+                  >
+                    Удалить чат
+                  </MenuItem>
+                </Menu>
               </div>
             </div>
           );

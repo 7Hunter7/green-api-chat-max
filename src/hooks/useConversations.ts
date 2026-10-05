@@ -1,7 +1,7 @@
-import { useCallback, useState } from 'react';
-import type { ChatMessage, Conversation } from '../types';
+import { useCallback, useState } from "react";
+import type { ChatMessage, Conversation } from "../types";
 
-const LS_KEY = 'green-api-chat-conversations';
+const LS_KEY = "green-api-chat-conversations";
 
 function loadFromStorage(): Conversation[] {
   try {
@@ -92,5 +92,43 @@ export function useConversations() {
     [conversations, persist],
   );
 
-  return { conversations, addOrGet, remove, touch, markRead };
+  /**
+   * Пометить чат непрочитанным.
+   * В MAX это ставит бейдж «1», а не инкремент — так пользователь видит,
+   * что есть что-то непрочитанное, но не теряется в больших числах.
+   */
+  const markUnread = useCallback(
+    (chatId: string) => {
+      persist(
+        conversations.map((c) =>
+          c.chatId === chatId ? { ...c, unreadCount: 1 } : c,
+        ),
+      );
+    },
+    [conversations, persist],
+  );
+
+  /** Очистить превью чата (при «Стереть переписку» без удаления чата) */
+  const clearPreview = useCallback(
+    (chatId: string) => {
+      persist(
+        conversations.map((c) =>
+          c.chatId === chatId
+            ? { ...c, lastMessage: undefined, unreadCount: 0 }
+            : c,
+        ),
+      );
+    },
+    [conversations, persist],
+  );
+
+  return {
+    conversations,
+    addOrGet,
+    remove,
+    touch,
+    markRead,
+    markUnread,
+    clearPreview,
+  };
 }

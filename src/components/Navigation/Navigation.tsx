@@ -12,6 +12,7 @@ export type NavigationSection =
 interface Props {
   activeSection?: NavigationSection;
   onSelectSection?: (section: NavigationSection) => void;
+  // onLogout?: () => void;
   newCount?: number;
   channelsCount?: number;
 }
@@ -19,6 +20,7 @@ interface Props {
 export function Navigation({
   activeSection = "all",
   onSelectSection,
+  // onLogout,
   newCount = 0,
   channelsCount = 0,
 }: Props) {

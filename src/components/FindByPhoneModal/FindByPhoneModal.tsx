@@ -31,11 +31,15 @@ export function FindByPhoneModal({
   const [value, setValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Сброс и фокус при открытии
+  const [prevOpen, setPrevOpen] = useState(open);
+  // Сброс при открытии
+  if (open !== prevOpen) {
+    setPrevOpen(open);
+    if (open) setValue("");
+  }
+  // Фокус после анимации открытия
   useEffect(() => {
     if (open) {
-      setValue("");
-      // Фокус после анимации открытия
       requestAnimationFrame(() => inputRef.current?.focus());
     }
   }, [open]);
