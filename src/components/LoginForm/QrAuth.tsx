@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Button, Icon } from "../../ui";
+import { MaxLogo } from "./MaxLogo";
 import { getQrCode, getStateInstance } from "../../api/greenApi";
 import type { Credentials, InstanceState } from "../../types";
 import { CredentialsForm } from "./CredentialsForm";
@@ -100,17 +102,21 @@ export function QrAuth({ onLogin, onPendingPassword, onBack }: Props) {
   return (
     <div className="login-wrap">
       <div className="login-card login-card--qr">
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="small"
           className="login-back"
+          icon={<Icon name="arrow_left" size={20} />}
           onClick={() => {
             stopTimers();
             onBack();
           }}
-          aria-label="Назад"
         >
-          ← Назад
-        </button>
+          Назад
+        </Button>
+
+        <MaxLogo size={28} />
 
         <div className="qr-wrap">
           {qrSrc ? (
@@ -124,20 +130,22 @@ export function QrAuth({ onLogin, onPendingPassword, onBack }: Props) {
           Войдите в MAX по QR-коду
         </h2>
         <p className="login-card__hint">
-          Наведите камеру на QR-код, чтобы войти в профиль или скачать
-          приложение
+          Наведите камеру на QR-код, чтобы войти в профиль
         </p>
 
         {error && <div className="login-error">{error}</div>}
 
-        <button
+        <Button
           type="button"
-          className="login-card__secondary"
+          variant="secondary"
+          size="large"
+          stretched
+          loading={refreshing}
           onClick={() => creds && loadQr(creds, true)}
           disabled={refreshing}
         >
           {refreshing ? "Обновление…" : "Обновить QR"}
-        </button>
+        </Button>
       </div>
     </div>
   );
