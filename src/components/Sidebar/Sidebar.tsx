@@ -167,7 +167,6 @@ export function Sidebar({
                       type="button"
                       className="chat-item__menu-button"
                       aria-label="Еще"
-                      onClick={(e) => e.stopPropagation()}
                     >
                       <Icon name="dots_horizontal_mini" size={16} />
                     </button>
@@ -199,10 +198,10 @@ export function Sidebar({
                   </MenuItem>
 
                   <MenuItem
-                    icon={<Icon name="launch" size={20} />}
+                    icon={<Icon name="pin" size={20} />}
                     onClick={() => onSelect(c.chatId)}
                   >
-                    Открыть
+                    Закрепить
                   </MenuItem>
 
                   <MenuItem
