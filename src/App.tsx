@@ -41,6 +41,7 @@ export default function App() {
     markRead,
     markUnread,
     clearPreview,
+    togglePinned,
   } = useConversations();
 
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
@@ -228,6 +229,14 @@ export default function App() {
     markUnread(chatId);
   };
 
+  const handleTogglePinned = (chatId: string) => {
+    togglePinned(chatId);
+  };
+
+  const handleMarkRead = (chatId: string) => {
+    markRead(chatId);
+  };
+
   const activeConversation = useMemo(
     () => conversations.find((c) => c.chatId === activeChatId),
     [conversations, activeChatId],
@@ -259,6 +268,8 @@ export default function App() {
         onRemove={handleRemove}
         onClearHistory={handleClearHistory}
         onMarkUnread={handleMarkUnread}
+        onMarkRead={handleMarkRead}
+        onTogglePinned={handleTogglePinned}
       />
       <main className="app__main">
         {activeChatId && activeConversation ? (

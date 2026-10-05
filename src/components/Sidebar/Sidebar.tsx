@@ -13,6 +13,8 @@ interface Props {
   onRemove: (chatId: string) => void;
   onClearHistory?: (chatId: string) => void;
   onMarkUnread?: (chatId: string) => void;
+  onMarkRead?: (chatId: string) => void;
+  onTogglePinned?: (chatId: string) => void;
 }
 
 export function Sidebar({
@@ -23,29 +25,39 @@ export function Sidebar({
   onRemove,
   onClearHistory,
   onMarkUnread,
+  onMarkRead,
+  onTogglePinned,
 }: Props) {
   const [findModalOpen, setFindModalOpen] = useState(false);
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return conversations;
-    return conversations.filter(
-      (c) =>
-        c.phone.toLowerCase().includes(q) ||
-        (c.lastMessage ?? "").toLowerCase().includes(q),
-    );
+    const base = q
+      ? conversations.filter(
+          (c) =>
+            c.phone.toLowerCase().includes(q) ||
+            (c.lastMessage ?? "").toLowerCase().includes(q),
+        )
+      : conversations;
+    
+    // Сортировка: закреплённые сверху, потом по lastTimestamp
+    return [...base].sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      return (b.lastTimestamp ?? 0) - (a.lastTimestamp ?? 0);
+    });
   }, [conversations, search]);
 
   // Заглушки для новых действий
   const handleCreateGroup = () => {
-    alert('Создать группу — в разработке');
+    alert("Создать группу — в разработке");
   };
   const handleCreateChannel = () => {
-    alert('Создать канал — в разработке');
+    alert("Создать канал — в разработке");
   };
   const handleCreateCall = () => {
-    alert('Создать групповой звонок — в разработке');
+    alert("Создать групповой звонок — в разработке");
   };
   const handleFindByPhone = () => {
     setFindModalOpen(true);
@@ -54,7 +66,7 @@ export function Sidebar({
     await onAdd(phone);
   };
   const handleInviteByLink = () => {
-    alert('Пригласить по ссылке — в разработке');
+    alert("Пригласить по ссылке — в разработке");
   };
 
   return (
@@ -126,9 +138,7 @@ export function Sidebar({
         {filtered.map((c) => {
           const active = c.chatId === activeChatId;
           return (
-            <div
-              key={c.chatId}
-              className="chat-item">
+            <div key={c.chatId} className="chat-item">
               <button
                 type="button"
                 className={`chat-item__cell${active ? " chat-item__cell--selected" : ""}`}
@@ -148,6 +158,11 @@ export function Sidebar({
                   {c.lastTimestamp && (
                     <span className="chat-item__time">
                       {formatTime(c.lastTimestamp)}
+                    </span>
+                  )}
+                  {c.pinned && (
+                    <span className="chat-item__pin" aria-label="Чат закреплён">
+                      <Icon name="pin_fill" size={16} />
                     </span>
                   )}
                 </div>
@@ -198,17 +213,34 @@ export function Sidebar({
                   </MenuItem>
 
                   <MenuItem
-                    icon={<Icon name="pin" size={20} />}
-                    onClick={() => onSelect(c.chatId)}
+                    icon={
+                      <Icon name={c.pinned ? "pin_crossed" : "pin"} size={20} />
+                    }
+                    onClick={() => onTogglePinned?.(c.chatId)}
                   >
-                    Закрепить
+                    {c.pinned ? "Открепить" : "Закрепить"}
                   </MenuItem>
 
                   <MenuItem
-                    icon={<Icon name="message_unread" size={20} />}
-                    onClick={() => onMarkUnread?.(c.chatId)}
+                    icon={
+                      <Icon
+                        name={
+                          c.unreadCount > 0 ? "message_check" : "message_unread"
+                        }
+                        size={20}
+                      />
+                    }
+                    onClick={() => {
+                      if (c.unreadCount > 0) {
+                        onMarkRead?.(c.chatId);
+                      } else {
+                        onMarkUnread?.(c.chatId);
+                      }
+                    }}
                   >
-                    Отметить непрочитанным
+                    {c.unreadCount > 0
+                      ? "Отметить прочитанными"
+                      : "Отметить непрочитанными"}
                   </MenuItem>
 
                   <MenuItem

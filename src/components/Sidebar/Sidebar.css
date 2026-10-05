@@ -212,3 +212,15 @@
   background: var(--states-button-ghost-hover);
   color: var(--icon-primary);
 }
+
+.chat-item__pin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--icon-mute);
+}
+
+.chat-item__cell--selected .chat-item__pin {
+  color: var(--icon-secondary);
+}

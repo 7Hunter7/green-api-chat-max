@@ -34,6 +34,7 @@ export interface Conversation {
   lastMessage?: string;
   lastTimestamp?: number;
   unreadCount: number;
+  pinned?: boolean;
 }
 
 export interface GreenApiNotification {

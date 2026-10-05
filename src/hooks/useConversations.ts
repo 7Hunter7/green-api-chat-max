@@ -72,7 +72,8 @@ export function useConversations() {
       );
       // поднимаем измененный чат наверх
       const idx = next.findIndex((c) => c.chatId === chatId);
-      if (idx > 0) {
+      // Поднимаем наверх, если чат не закреплён (закреплённые не двигаем)
+      if (idx > 0 && !next[idx].pinned) {
         const [moved] = next.splice(idx, 1);
         next.unshift(moved);
       }
@@ -121,6 +122,18 @@ export function useConversations() {
     },
     [conversations, persist],
   );
+  
+  /** Прикрепить/открепить чат */
+  const togglePinned = useCallback(
+    (chatId: string) => {
+      persist(
+        conversations.map((c) =>
+          c.chatId === chatId ? { ...c, pinned: !c.pinned } : c,
+        ),
+      );
+    },
+    [conversations, persist],
+  );
 
   return {
     conversations,
@@ -130,5 +143,6 @@ export function useConversations() {
     markRead,
     markUnread,
     clearPreview,
+    togglePinned,
   };
 }
