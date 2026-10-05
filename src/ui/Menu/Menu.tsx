@@ -15,16 +15,17 @@ export interface MenuProps {
 
   // === Режим 1: с триггером (обычное меню) ===
   trigger?: ReactElement;
-  align?: "start" | "end";
-  offset?: number;
 
   // === Режим 2: управляемое подменю ===
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
-  /** Ref на элемент, к которому привязать подменю */
+  /** Внешний ref на DOM-элемент, к которому привязать меню */
   anchorRef?: RefObject<HTMLElement | null>;
-  /** Позиция относительно anchor */
-  pos?: "bottom" | "right" | "top" | "left";
+
+  align?: "start" | "end";
+  offset?: number;
+  /** Позиция относительно anchor: 'bottom' (под) или 'right' (справа) */
+  position?: "bottom" | "right";
 }
 
 interface Position {
@@ -40,11 +41,13 @@ export function Menu({
   open: controlledOpen,
   onOpenChange,
   anchorRef,
-  pos = "bottom",
+  position = "bottom",
 }: MenuProps) {
   const [internalOpen, setInternalOpen] = useState(false);
-  const [position, setPosition] = useState<Position | null>(null);
+  const [pos, setPos] = useState<Position | null>(null);
+  // Ref для триггер-режима
   const [triggerEl, setTriggerEl] = useState<HTMLElement | null>(null);
+  // Ref для меню
   const [menuEl, setMenuEl] = useState<HTMLDivElement | null>(null);
 
   const isControlled = controlledOpen !== undefined;
@@ -65,14 +68,14 @@ export function Menu({
     [open, setOpen],
   );
 
-  // Закрытие по клику вне меню
+  // Закрытие по клику вне / Escape
   useEffect(() => {
     if (!open) return;
 
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      // Если клик внутри любого .menu (родитель или подменю) — не закрываем
-      if (!target.closest?.('.menu')) {
+      // Клик внутри любого .menu (родитель или подменю) — не закрываем
+      if (!target.closest?.(".menu")) {
         setOpen(false);
       }
     };
@@ -87,7 +90,7 @@ export function Menu({
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [open, menuEl, triggerEl, setOpen]);
+  }, [open, setOpen]);
 
   // Позиционирование
   useEffect(() => {
@@ -104,7 +107,7 @@ export function Menu({
       let left: number;
       let top: number;
 
-      if (pos === "right") {
+      if (position === "right") {
         // Подменю справа от anchor
         left = rect.right + offset;
         top = rect.top;
@@ -122,13 +125,19 @@ export function Menu({
         top = rect.bottom + offset;
       }
 
+      // Не вылезаем за края
       if (left + menuWidth > window.innerWidth - 8) {
         left = window.innerWidth - menuWidth - 8;
       }
-      // Не вылезаем за левый край
       if (left < 8) left = 8;
+      // По вертикали тоже
+      const menuHeight = menuRect?.height ?? 0;
+      if (top + menuHeight > window.innerHeight - 8) {
+        top = window.innerHeight - menuHeight - 8;
+      }
+      if (top < 8) top = 8;
 
-      setPosition({ top, left });
+      setPos({ top, left });
     };
 
     // Первый расчёт — после рендера меню (чтобы знать его размеры)
@@ -140,7 +149,7 @@ export function Menu({
       window.removeEventListener("resize", updatePosition);
       window.removeEventListener("scroll", updatePosition, true);
     };
-  }, [open, align, offset, pos, anchorRef, triggerEl, menuEl]);
+  }, [open, align, offset, position, anchorRef, triggerEl, menuEl]);
 
   return (
     <>
@@ -163,8 +172,8 @@ export function Menu({
             className="menu"
             role="menu"
             style={
-              position
-                ? { top: position.top, left: position.left }
+              pos
+                ? { top: pos.top, left: pos.left }
                 : { visibility: "hidden", position: "fixed", top: 0, left: 0 }
             }
           >

@@ -62,12 +62,11 @@ export function MenuItem({
 
       {hasSubmenu && submenuOpen && (
         <Menu
-          trigger={<span ref={itemRef} style={{ display: "none" }} />}
           open={submenuOpen}
           onOpenChange={setSubmenuOpen}
-          align="end"
-          position="right"
           anchorRef={itemRef}
+          position="right"
+          offset={4}
         >
           {submenu!.map((item, i) => (
             <MenuItem key={i} {...item} />
