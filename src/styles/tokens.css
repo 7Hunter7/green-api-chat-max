@@ -136,6 +136,7 @@
   --border-radius-common-l: 14px;
   --border-radius-common-xl: 18px;
   --border-radius-common-xxl: 24px;
+  --border-radius-common-3xl: 32px;
   --border-radius-common-4xl: 48px;  /* для аватаров */
   --border-radius-round: 9999px;
 
@@ -147,6 +148,7 @@
   --spacing-m-half: 10px;
   --spacing-m: 12px;
   --spacing-l: 16px;
+  --spacing-xl-half: 20px;
   --spacing-xl: 24px;
   --spacing-xxl: 32px;
 

@@ -14,3 +14,6 @@ export { Menu } from './Menu/Menu';
 export type { MenuProps } from './Menu/Menu';
 export { MenuItem } from './Menu/MenuItem';
 export type { MenuItemProps } from './Menu/MenuItem';
+
+export { Modal } from './Modal/Modal';
+export type { ModalProps } from './Modal/Modal';
