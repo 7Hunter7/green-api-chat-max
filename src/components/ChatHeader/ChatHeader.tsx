@@ -1,4 +1,4 @@
-import { Button, Icon } from '../../ui';
+import { Button, Icon, Menu, MenuItem } from '../../ui';
 import type { Conversation } from '../../types';
 import { formatPhone } from '../../utils/chatId';
 import './ChatHeader.css';
@@ -17,7 +17,6 @@ export function ChatHeader({
   conversation,
   onBack = noop,
   onSearch = noop,
-  onMore = noop,
   onProfileClick = noop,
 }: Props) {
   const phone = conversation.phone;
@@ -59,16 +58,42 @@ export function ChatHeader({
           onClick={onSearch}
           icon={<Icon name="search" size={24} />}
         />
-        <Button
-          variant="ghost"
-          size="small"
-          aria-label="Ещё"
-          aria-haspopup="dialog"
-          aria-expanded={false}
-          onClick={onMore}
-          icon={<Icon name="dots_vertical" size={24} />}
-        />
       </div>
+
+      <Menu
+        align="end"
+        trigger={
+          <Button
+            variant="ghost"
+            size="small"
+            aria-label="Ещё"
+            icon={<Icon name="dots_vertical" size={24} />}
+          />
+        }
+      >
+        <MenuItem
+          icon={<Icon name="notifications_crossed" size={20} />}
+          submenu={[
+            { children: 'На 1 час', onClick: () => alert('1 час') },
+            { children: 'На 4 часа', onClick: () => alert('4 часа') },
+            { children: 'На 1 день', onClick: () => alert('1 день') },
+            { children: 'Навсегда', danger: true, onClick: () => alert('навсегда') },
+          ]}
+        >
+          Отключить уведомления
+        </MenuItem>
+
+        <MenuItem
+          icon={<Icon name="folder_add_to" size={20} />}
+          submenu={[
+            { icon: <Icon name="folder" size={20} />, children: 'Новые', onClick: () => alert('Новые') },
+            { icon: <Icon name="folder" size={20} />, children: 'Каналы', onClick: () => alert('Каналы') },
+            { icon: <Icon name="plus" size={20} />, children: 'Создать папку', onClick: () => alert('Создать папку') },
+          ]}
+        >
+          Добавить в папку
+        </MenuItem>
+      </Menu>
     </header>
   );
 }

@@ -73,3 +73,26 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Стрелка у пункта с подменю */
+.menu-item__chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--icon-tertiary);
+}
+
+/* Красный текст (деструктивные действия) */
+.menu-item--danger {
+  color: var(--text-negative);
+}
+
+.menu-item--danger .menu-item__icon {
+  color: var(--icon-negative);
+}
+
+.menu-item--danger:hover:not(:disabled) {
+  background: var(--button-negative-fade);
+}

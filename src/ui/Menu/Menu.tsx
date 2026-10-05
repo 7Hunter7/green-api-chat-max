@@ -4,19 +4,27 @@ import {
   useState,
   type ReactElement,
   type ReactNode,
+  type RefObject,
 } from "react";
 import { createPortal } from "react-dom";
 import "./Menu.css";
 
 export interface MenuProps {
-  /** Триггер — любой кликабельный элемент (обычно Button) */
-  trigger: ReactElement;
-  /** Пункты меню (MenuItem) */
+  /** Пункты меню */
   children: ReactNode;
-  /** Выравнивание меню относительно триггера */
+
+  // === Режим 1: с триггером (обычное меню) ===
+  trigger?: ReactElement;
   align?: "start" | "end";
-  /** Отступ от триггера в пикселях */
   offset?: number;
+
+  // === Режим 2: управляемое подменю ===
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Ref на элемент, к которому привязать подменю */
+  anchorRef?: RefObject<HTMLElement | null>;
+  /** Позиция относительно anchor */
+  pos?: "bottom" | "right" | "top" | "left";
 }
 
 interface Position {
@@ -29,33 +37,48 @@ export function Menu({
   children,
   align = "start",
   offset = 4,
+  open: controlledOpen,
+  onOpenChange,
+  anchorRef,
+  pos = "bottom",
 }: MenuProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
   const [position, setPosition] = useState<Position | null>(null);
   const [triggerEl, setTriggerEl] = useState<HTMLElement | null>(null);
   const [menuEl, setMenuEl] = useState<HTMLDivElement | null>(null);
 
-  // Ссылка на актуальный "закрыть" — используется в слушателях
-  const close = useCallback(() => setOpen(false), []);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : internalOpen;
+  const setOpen = useCallback(
+    (v: boolean) => {
+      if (isControlled) onOpenChange?.(v);
+      else setInternalOpen(v);
+    },
+    [isControlled, onOpenChange],
+  );
 
-  const toggle = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    setOpen((v) => !v);
-  }, []);
+  const toggle = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setOpen(!open);
+    },
+    [open, setOpen],
+  );
 
   // Закрытие по клику вне меню
   useEffect(() => {
     if (!open) return;
 
     const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as Node;
-      if (!menuEl?.contains(target) && !triggerEl?.contains(target)) {
-        close();
+      const target = e.target as HTMLElement;
+      // Если клик внутри любого .menu (родитель или подменю) — не закрываем
+      if (!target.closest?.('.menu')) {
+        setOpen(false);
       }
     };
 
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
+      if (e.key === "Escape") setOpen(false);
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -64,30 +87,41 @@ export function Menu({
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [open, menuEl, triggerEl, close]);
+  }, [open, menuEl, triggerEl, setOpen]);
 
-  // Расчёт позиции при открытии и при ресайзе/скролле
+  // Позиционирование
   useEffect(() => {
-    if (!open || !triggerEl) return;
+    if (!open) return;
+
+    const anchor = anchorRef?.current ?? triggerEl;
+    if (!anchor) return;
 
     const updatePosition = () => {
-      const rect = triggerEl.getBoundingClientRect();
+      const rect = anchor.getBoundingClientRect();
       const menuRect = menuEl?.getBoundingClientRect();
+      const menuWidth = menuRect?.width ?? 240;
 
       let left: number;
-      if (align === "end") {
-        // Правый край меню = правый край триггера
-        const menuWidth = menuRect?.width ?? 240;
-        left = rect.right - menuWidth;
+      let top: number;
+
+      if (pos === "right") {
+        // Подменю справа от anchor
+        left = rect.right + offset;
+        top = rect.top;
+        // Если не хватает места — откроем слева
+        if (left + menuWidth > window.innerWidth - 8) {
+          left = rect.left - menuWidth - offset;
+        }
       } else {
-        left = rect.left;
+        // Обычное меню под anchor
+        if (align === "end") {
+          left = rect.right - menuWidth;
+        } else {
+          left = rect.left;
+        }
+        top = rect.bottom + offset;
       }
 
-      // top — под триггером
-      const top = rect.bottom + offset;
-
-      // Не вылезаем за правый край экрана
-      const menuWidth = menuRect?.width ?? 240;
       if (left + menuWidth > window.innerWidth - 8) {
         left = window.innerWidth - menuWidth - 8;
       }
@@ -106,19 +140,21 @@ export function Menu({
       window.removeEventListener("resize", updatePosition);
       window.removeEventListener("scroll", updatePosition, true);
     };
-  }, [open, align, offset, triggerEl, menuEl]);
+  }, [open, align, offset, pos, anchorRef, triggerEl, menuEl]);
 
   return (
     <>
-      <span
-        ref={setTriggerEl}
-        className="menu__trigger"
-        onClick={toggle}
-        aria-haspopup="menu"
-        aria-expanded={open}
-      >
-        {trigger}
-      </span>
+      {trigger && (
+        <span
+          ref={setTriggerEl}
+          className="menu__trigger"
+          onClick={toggle}
+          aria-haspopup="menu"
+          aria-expanded={open}
+        >
+          {trigger}
+        </span>
+      )}
 
       {open &&
         createPortal(
