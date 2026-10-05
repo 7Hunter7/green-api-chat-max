@@ -35,6 +35,8 @@
     rgba(80, 91, 199, 0.3) 8.03%,
     rgba(80, 91, 199, 0.3) 91.51%
   );
+  --chat-pattern-url: url("/assets/pattern_space.svg");
+  background: var(--chat-bg-base);
 }
 
 /* ---- Светлая тема ---- */
@@ -59,9 +61,6 @@
     rgba(0, 122, 255, 0.3) 8.03%,
     rgba(0, 122, 255, 0.3) 91.51%
   );
-  --chat-pattern-url: url("/assets/pattern_space.svg");
-
-  background: var(--chat-bg-base);
 }
 
 /* ---- Слой 1: radial-подсветки (в тёмной теме прозрачные) ---- */
