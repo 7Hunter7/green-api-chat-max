@@ -94,6 +94,7 @@ export type IconName =
   | "privacy_fill"
   | "privacy_policy"
   | "key"
+  | "link"
   // Уведомления
   | "notifications"
   | "notifications_crossed"
@@ -128,6 +129,7 @@ export type IconName =
   | "call_missed_fill"
   | "video_call"
   | "video_call_fill"
+  | "megaphone"
   // Загрузка
   | "spinner_ios"
   | "spinner_android";

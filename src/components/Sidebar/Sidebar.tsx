@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Button, Icon, Input } from '../../ui';
+import { Button, Icon, Input, Menu, MenuItem } from '../../ui';
 import type { Conversation } from '../../types';
 import { formatTime } from '../../utils/time';
 import './Sidebar.css';
@@ -42,17 +42,70 @@ export function Sidebar({
     setAdding(false);
   };
 
+  // Заглушки для новых действий
+  const handleCreateGroup = () => {
+    alert('Создать группу — в разработке');
+  };
+  const handleCreateChannel = () => {
+    alert('Создать канал — в разработке');
+  };
+  const handleCreateCall = () => {
+    alert('Создать групповой звонок — в разработке');
+  };
+  const handleFindByPhone = () => {
+    setAdding(true);
+  };
+  const handleInviteByLink = () => {
+    alert('Пригласить по ссылке — в разработке');
+  };
+
   return (
     <aside className="sidebar">
       <header className="sidebar__header">
         <h2 className="sidebar__title">Чаты</h2>
-        <Button
-          variant="primary"
-          size="xsmall"
-          icon={<Icon name="plus" size={20} />}
-          aria-label="Новый чат"
-          onClick={() => setAdding((v) => !v)}
-        />
+
+        <Menu
+          align="end"
+          trigger={
+            <Button
+              variant="primary"
+              size="xsmall"
+              icon={<Icon name="plus" size={20} />}
+              aria-label="Создать"
+            />
+          }
+        >
+          <MenuItem
+            icon={<Icon name="users" size={20} />}
+            onClick={handleCreateGroup}
+          >
+            Создать группу
+          </MenuItem>
+          <MenuItem
+            icon={<Icon name="megaphone" size={20} />}
+            onClick={handleCreateChannel}
+          >
+            Создать канал
+          </MenuItem>
+          <MenuItem
+            icon={<Icon name="call" size={20} />}
+            onClick={handleCreateCall}
+          >
+            Создать групповой звонок
+          </MenuItem>
+          <MenuItem
+            icon={<Icon name="search" size={20} />}
+            onClick={handleFindByPhone}
+          >
+            Найти по номеру
+          </MenuItem>
+          <MenuItem
+            icon={<Icon name="link" size={20} />}
+            onClick={handleInviteByLink}
+          >
+            Пригласить по ссылке
+          </MenuItem>
+        </Menu>
       </header>
 
       {adding && (
