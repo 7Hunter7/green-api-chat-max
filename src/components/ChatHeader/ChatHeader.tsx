@@ -141,6 +141,7 @@ export function ChatHeader({
             placeholder="Поиск"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            clearable
             leftSlot={<Icon name="search" size={16} />}
             tabIndex={searchOpen ? 0 : -1}
           />
