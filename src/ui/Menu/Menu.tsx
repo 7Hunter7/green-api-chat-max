@@ -6,7 +6,9 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { useContext } from 'react';
 import { createPortal } from "react-dom";
+import { MenuContext } from "./MenuContext";
 import "./Menu.css";
 
 export interface MenuProps {
@@ -49,6 +51,9 @@ export function Menu({
   const [triggerEl, setTriggerEl] = useState<HTMLElement | null>(null);
   // Ref для меню
   const [menuEl, setMenuEl] = useState<HTMLDivElement | null>(null);
+  const [openSubmenuId, setOpenSubmenuId] = useState<string | null>(null);
+  // Получаем контекст родителя — если мы внутри другого Menu
+  const parentCtx = useContext(MenuContext);
 
   const isControlled = controlledOpen !== undefined;
   const open = isControlled ? controlledOpen : internalOpen;
@@ -56,9 +61,16 @@ export function Menu({
     (v: boolean) => {
       if (isControlled) onOpenChange?.(v);
       else setInternalOpen(v);
+      // При закрытии родителя сбрасываем открытое подменю
+      if (!v) setOpenSubmenuId(null);
     },
     [isControlled, onOpenChange],
   );
+
+  const closeAll = useCallback(() => {
+    setOpen(false);
+    parentCtx?.closeAll();
+  }, [setOpen, parentCtx]);
 
   const toggle = useCallback(
     (e: React.MouseEvent) => {
@@ -103,6 +115,7 @@ export function Menu({
       const rect = anchor.getBoundingClientRect();
       const menuRect = menuEl?.getBoundingClientRect();
       const menuWidth = menuRect?.width ?? 240;
+      const menuHeight = menuRect?.height ?? 0;
 
       let left: number;
       let top: number;
@@ -130,8 +143,6 @@ export function Menu({
         left = window.innerWidth - menuWidth - 8;
       }
       if (left < 8) left = 8;
-      // По вертикали тоже
-      const menuHeight = menuRect?.height ?? 0;
       if (top + menuHeight > window.innerHeight - 8) {
         top = window.innerHeight - menuHeight - 8;
       }
@@ -177,7 +188,15 @@ export function Menu({
                 : { visibility: "hidden", position: "fixed", top: 0, left: 0 }
             }
           >
-            {children}
+            <MenuContext.Provider
+              value={{
+                closeAll,
+                openSubmenuId,
+                setOpenSubmenuId,
+              }}
+            >
+              {children}
+            </MenuContext.Provider>
           </div>,
           document.body,
         )}

@@ -1,6 +1,7 @@
-import { useRef, useState, type ReactNode } from "react";
+import { useId, useRef, type ReactNode } from "react";
 import { Icon } from "../Icon/Icon";
 import { Menu } from "./Menu";
+import { useMenuContext } from "./MenuContext";
 
 export interface MenuItemProps {
   icon?: ReactNode;
@@ -21,17 +22,23 @@ export function MenuItem({
   danger = false,
   submenu,
 }: MenuItemProps) {
-  const [submenuOpen, setSubmenuOpen] = useState(false);
+  const itemId = useId();
   const itemRef = useRef<HTMLButtonElement>(null);
+  const ctx = useMenuContext();
 
   const hasSubmenu = !!submenu && submenu.length > 0;
+  const isSubmenuOpen = ctx ? ctx.openSubmenuId === itemId : false;
 
   const handleClick = () => {
     if (disabled) return;
     if (hasSubmenu) {
-      setSubmenuOpen((v) => !v);
+      // Открыть это подменю (закрыв остальные) или закрыть
+      if (ctx) {
+        ctx.setOpenSubmenuId(isSubmenuOpen ? null : itemId);
+      }
     } else {
       onClick?.();
+      ctx?.closeAll();
     }
   };
 
@@ -49,7 +56,7 @@ export function MenuItem({
         onClick={handleClick}
         disabled={disabled}
         aria-haspopup={hasSubmenu ? "menu" : undefined}
-        aria-expanded={hasSubmenu ? submenuOpen : undefined}
+        aria-expanded={hasSubmenu ? isSubmenuOpen : undefined}
       >
         {icon && <span className="menu-item__icon">{icon}</span>}
         <span className="menu-item__label">{children}</span>
@@ -60,10 +67,12 @@ export function MenuItem({
         )}
       </button>
 
-      {hasSubmenu && submenuOpen && (
+      {hasSubmenu && isSubmenuOpen && (
         <Menu
-          open={submenuOpen}
-          onOpenChange={setSubmenuOpen}
+          open={isSubmenuOpen}
+          onOpenChange={(v) => {
+            if (!v) ctx?.setOpenSubmenuId(null);
+          }}
           anchorRef={itemRef}
           position="right"
           offset={4}
