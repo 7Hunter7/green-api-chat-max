@@ -1,9 +1,98 @@
+/* 
+  ===================================================================
+  ChatWindow: колонка чата с фоном.
+  Фон — трёхслойный:
+    Слой 0 (background)    — линейный градиент (база)
+    Слой 1 (::before)      — radial-подсветки (только светлая тема)
+    Слой 2 (::after)       — паттерн + цветная вуаль
+  Контент — z-index: 2 поверх всех слоёв.
+  ===================================================================
+*/
 .chat-window {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: var(--background-primary);
-  background-image:
-    radial-gradient(circle at 20% 20%, var(--accent-primary-fade), transparent 40%),
-    radial-gradient(circle at 80% 70%, var(--accent-primary-fade), transparent 40%);
+  position: relative;
+  overflow: hidden;
+
+  /* ---- Тёмная тема ---- */
+  --chat-bg-base: linear-gradient(28deg, #141414 8.03%, #141414 91.51%);
+  --chat-bg-additional:
+    radial-gradient(
+      57.57% 53.61% at 94.4% 14.38%,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 50%,
+      rgba(0, 0, 0, 0) 100%
+    ),
+    radial-gradient(
+      140.37% 51.38% at 0% 80.05%,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 50%,
+      rgba(0, 0, 0, 0) 100%
+    );
+  --chat-pattern-overlay: linear-gradient(
+    28deg,
+    rgba(80, 91, 199, 0.3) 8.03%,
+    rgba(80, 91, 199, 0.3) 91.51%
+  );
+}
+
+/* ---- Светлая тема ---- */
+:root:where([data-color-theme="space"][data-color-scheme="light"]) .chat-window,
+[data-color-theme="space"][data-color-scheme="light"] .chat-window {
+  --chat-bg-base: linear-gradient(28deg, #99d5d7 8.03%, #80bcff 91.51%);
+  --chat-bg-additional:
+    radial-gradient(
+      57.57% 53.61% at 94.4% 14.38%,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0) 50%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    radial-gradient(
+      140.37% 51.38% at 0% 80.05%,
+      rgba(0, 122, 255, 0.2) 0%,
+      rgba(0, 122, 255, 0) 50%,
+      rgba(0, 122, 255, 0) 100%
+    );
+  --chat-pattern-overlay: linear-gradient(
+    28deg,
+    rgba(0, 122, 255, 0.3) 8.03%,
+    rgba(0, 122, 255, 0.3) 91.51%
+  );
+  --chat-pattern-url: url("/assets/pattern_space.svg");
+
+  background: var(--chat-bg-base);
+}
+
+/* ---- Слой 1: radial-подсветки (в тёмной теме прозрачные) ---- */
+.chat-window::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: var(--chat-bg-additional);
+}
+
+/* ---- Слой 2: паттерн + цветная вуаль поверх него ---- */
+.chat-window::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: var(--chat-pattern-overlay), var(--chat-pattern-url);
+  background-repeat: repeat, repeat;
+  background-size:
+    auto,
+    280px 280px;
+  background-position:
+    0 0,
+    0 0;
+}
+
+/* ---- Контент над фоном ---- */
+.chat-window > * {
+  position: relative;
+  z-index: 2;
 }
