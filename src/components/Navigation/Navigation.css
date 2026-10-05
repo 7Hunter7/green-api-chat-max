@@ -59,3 +59,7 @@
   padding: 0 var(--spacing-xs);
   flex: 1;
 }
+
+.navigation__item--settings {
+  margin-top: auto;
+}

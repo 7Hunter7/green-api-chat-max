@@ -30,7 +30,7 @@ export function Navigation({
             <div className="navigation__upper-trigger" aria-hidden="true" />
             <div className="navigation__item">
               <NavButton
-                iconName="globe"
+                iconName="message_fill"
                 label="Все"
                 active={activeSection === "all"}
                 onClick={() => onSelectSection?.("all")}
@@ -45,7 +45,7 @@ export function Navigation({
               <div role="listitem" tabIndex={0}>
                 <div className="navigation__item">
                   <NavButton
-                    iconName="folder"
+                    iconName="folder_fill"
                     label="Новые"
                     active={activeSection === "new"}
                     counter={newCount}
@@ -57,7 +57,7 @@ export function Navigation({
               <div role="listitem" tabIndex={0}>
                 <div className="navigation__item">
                   <NavButton
-                    iconName="folder"
+                    iconName="folder_fill"
                     label="Каналы"
                     active={activeSection === "channels"}
                     counter={channelsCount}
@@ -75,14 +75,14 @@ export function Navigation({
 
         <div className="navigation__bottom-group">
           <NavButton
-            iconName="users"
+            iconName="users_fill"
             label="Контакты"
             active={activeSection === "contacts"}
             onClick={() => onSelectSection?.("contacts")}
           />
 
           <NavButton
-            iconName="call"
+            iconName="call_fill"
             label="Звонки"
             active={activeSection === "calls"}
             onClick={() => onSelectSection?.("calls")}
@@ -90,7 +90,7 @@ export function Navigation({
 
           <div className="navigation__item navigation__item--settings">
             <NavButton
-              iconName="settings"
+              iconName="settings_fill"
               label="Настройки"
               active={activeSection === "settings"}
               onClick={() => onSelectSection?.("settings")}

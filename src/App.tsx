@@ -162,12 +162,12 @@ export default function App() {
     if (activeChatId === chatId) setActiveChatId(null);
   };
 
-  const handleLogout = () => {
+  /*  const handleLogout = () => {
     setCredentials(null);
     setActiveChatId(null);
     setActiveSection("all");
     clearAllMessages();
-  };
+  }; */
 
   const handleMessageSent = (msg: ChatMessage) => {
     setMessagesByChat((prev) => ({
@@ -222,7 +222,6 @@ export default function App() {
       <Navigation
         activeSection={activeSection}
         onSelectSection={setActiveSection}
-        onLogout={handleLogout}
       />
       <Sidebar
         conversations={conversations}
@@ -230,7 +229,6 @@ export default function App() {
         onSelect={handleSelect}
         onAdd={handleAdd}
         onRemove={handleRemove}
-        onLogout={handleLogout}
       />
       <main className="app__main">
         {activeChatId && activeConversation ? (

@@ -51,6 +51,8 @@ export type IconName =
   | "dots_vertical_mini"
   | "reorder"
   | "reorder_big"
+  | "message"
+  | "message_fill"
   // Медиа
   | "smile_happy"
   | "microphone"
