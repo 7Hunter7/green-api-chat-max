@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react';
-import { Button, Icon, Input, Menu, MenuItem } from '../../ui';
-import type { Conversation } from '../../types';
-import { formatTime } from '../../utils/time';
-import './Sidebar.css';
+import { useMemo, useState } from "react";
+import { Button, Icon, Input, Menu, MenuItem } from "../../ui";
+import { FindByPhoneModal } from "../FindByPhoneModal/FindByPhoneModal";
+import type { Conversation } from "../../types";
+import { formatTime } from "../../utils/time";
+import "./Sidebar.css";
 
 interface Props {
   conversations: Conversation[];
@@ -19,9 +20,8 @@ export function Sidebar({
   onAdd,
   onRemove,
 }: Props) {
-  const [newPhone, setNewPhone] = useState('');
-  const [adding, setAdding] = useState(false);
-  const [search, setSearch] = useState('');
+  const [findModalOpen, setFindModalOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -29,18 +29,9 @@ export function Sidebar({
     return conversations.filter(
       (c) =>
         c.phone.toLowerCase().includes(q) ||
-        (c.lastMessage ?? '').toLowerCase().includes(q),
+        (c.lastMessage ?? "").toLowerCase().includes(q),
     );
   }, [conversations, search]);
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const p = newPhone.trim();
-    if (!p) return;
-    await onAdd(p);
-    setNewPhone('');
-    setAdding(false);
-  };
 
   // Заглушки для новых действий
   const handleCreateGroup = () => {
@@ -53,7 +44,10 @@ export function Sidebar({
     alert('Создать групповой звонок — в разработке');
   };
   const handleFindByPhone = () => {
-    setAdding(true);
+    setFindModalOpen(true);
+  };
+  const handleModalSubmit = async (phone: string) => {
+    await onAdd(phone);
   };
   const handleInviteByLink = () => {
     alert('Пригласить по ссылке — в разработке');
@@ -108,20 +102,6 @@ export function Sidebar({
         </Menu>
       </header>
 
-      {adding && (
-        <form className="sidebar__new" onSubmit={submit}>
-          <Input
-            autoFocus
-            placeholder="+7 999 123-45-67"
-            value={newPhone}
-            onChange={(e) => setNewPhone(e.target.value)}
-          />
-          <Button type="submit" variant="primary" size="medium">
-            Начать
-          </Button>
-        </form>
-      )}
-
       <div className="sidebar__search">
         <Input
           size="compact"
@@ -136,7 +116,7 @@ export function Sidebar({
       <div className="sidebar__list">
         {filtered.length === 0 && (
           <div className="sidebar__empty">
-            {search ? 'Ничего не найдено' : 'Нет чатов. Нажмите «+»'}
+            {search ? "Ничего не найдено" : "Нет чатов. Нажмите «+»"}
           </div>
         )}
         {filtered.map((c) => {
@@ -194,6 +174,12 @@ export function Sidebar({
           );
         })}
       </div>
+
+      <FindByPhoneModal
+        open={findModalOpen}
+        onClose={() => setFindModalOpen(false)}
+        onSubmit={handleModalSubmit}
+      />
     </aside>
   );
 }
