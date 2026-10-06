@@ -6,7 +6,7 @@
 
 ## Демо
 
-- **Production (Vercel):** [https://chat-max-roan.vercel.app/](https://chat-max-roan.vercel.app/)
+- **Vercel:** [https://chat-max.app/](https://green-chat-max-nine.vercel.app/)
 - **Локальный запуск:** [http://localhost:5173](http://localhost:5173)
 
 ## Документация

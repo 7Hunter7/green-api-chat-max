@@ -31,7 +31,7 @@ npm run dev
 
 Откроется: **http://localhost:5173**
 
-**Production-версия (Vercel):** [https://chat-max-roan.vercel.app/](https://chat-max-roan.vercel.app/)
+***Vercel:** [https://chat-max.app/](https://green-chat-max-nine.vercel.app/)
 
 ## 4. Получение данных инстанса GREEN-API
 
