@@ -21,33 +21,48 @@
   padding: var(--spacing-s) var(--spacing-m);
   border-radius: var(--border-radius-common-l);
 }
-
+/* ============ Бабл ============ */
 .bubble {
   max-width: 65%;
-  padding: var(--spacing-s) var(--spacing-m-half) var(--spacing-s-half);
-  border-radius: var(--border-radius-common-l);
   position: relative;
   word-wrap: break-word;
+  white-space: pre-wrap;
+  word-break: break-word;
   font-size: var(--font-detail-size);
   line-height: var(--font-detail-line-height);
-  color: var(--text-primary);
+  color: var(--bubbles-text-body);
+  border-radius: var(--border-radius-local-bubble-regular);
+  padding: var(--spacing-s) var(--spacing-m-half) var(--spacing-s-half);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
 }
 
+/* Входящий — слева */
 .bubble--in {
   align-self: flex-start;
-  background: var(--bubble-in);
-  color: var(--bubble-in-text);
-  /* Хвостик справа-снизу (со стороны собеседника — наоборот) */
-  border-bottom-left-radius: var(--border-radius-common-xs);
+  background: linear-gradient(
+    239deg,
+    var(--bubbles-background-bubble-in-step-1) 0%,
+    var(--bubbles-background-bubble-in-step-2) 50%,
+    var(--bubbles-background-bubble-in-step-3) 100%
+  );
+  border-bottom-left-radius: var(--border-radius-local-bubble-stack-corner);
 }
 
+/* Исходящий — справа */
 .bubble--out {
   align-self: flex-end;
-  background: var(--bubble-out);
-  color: var(--bubble-out-text);
-  border-bottom-right-radius: var(--border-radius-common-xs);
+  background: linear-gradient(
+    239deg,
+    var(--bubbles-background-bubble-gradient-step-1) 0%,
+    var(--bubbles-background-bubble-gradient-step-2) 50%,
+    var(--bubbles-background-bubble-gradient-step-3) 100%
+  );
+  border-bottom-right-radius: var(--border-radius-local-bubble-stack-corner);
 }
 
+/* ============ Мета: время + статус ============ */
 .bubble__meta {
   display: flex;
   align-items: center;
@@ -55,39 +70,43 @@
   gap: var(--spacing-xs);
   font-size: var(--font-tag-size);
   line-height: var(--font-tag-line-height);
-  margin-top: var(--spacing-xs);
-  color: var(--text-mute);
+  /* В MAX — мета использует --bubbles-text-time (голубой в светлой) */
+  color: var(--bubbles-text-time);
 }
 
-.bubble--out .bubble__meta {
-  color: var(--text-mute-inverse-static);
-}
-
+/* ============ Статус доставки ============ */
 .bubble__status {
   font-size: var(--font-tag-size);
   line-height: 1;
+  color: var(--bubbles-icon-read-status);
 }
 
 .bubble__status--pending {
   opacity: 0.5;
+  color: inherit;
 }
 
 .bubble__status--sent {
   opacity: 0.7;
+  color: inherit;
 }
 
 .bubble__status--delivered {
   opacity: 0.85;
+  color: inherit;
 }
 
 .bubble__status--read {
-  color: #7dd3fc;
+  color: var(--bubbles-icon-read-status);
+  opacity: 1;
 }
 
 .bubble__status--failed {
   color: var(--text-negative);
+  opacity: 1;
 }
 
+/* ============ Ошибка ============ */
 .bubble__error {
   margin-left: var(--spacing-xs);
   color: var(--text-negative);
@@ -95,10 +114,11 @@
   cursor: help;
 }
 
+/* ============ Имя отправителя (в группах) ============ */
 .bubble__sender {
   font-size: var(--font-label-size);
   line-height: var(--font-label-line-height);
   font-weight: var(--font-weight-semibold);
-  color: var(--accent-primary);
+  color: var(--bubbles-text-author);
   margin-bottom: var(--spacing-xxs);
 }

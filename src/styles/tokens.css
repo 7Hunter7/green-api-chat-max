@@ -163,7 +163,37 @@
   --transition-fast: 0.1s ease;
   --transition-base: 0.15s ease;
   --transition-slow: 0.25s ease;
+
+  /* ============ Bubbles (dark theme) ============ */
+
+  /* Исходящий бабл — с градиентом (фиолетовый -> сине-фиолетовый) */
+  --bubbles-background-bubble: #6965e5;
+  --bubbles-background-bubble-gradient-step-1: #8849b4;
+  --bubbles-background-bubble-gradient-step-2: #735acd;
+  --bubbles-background-bubble-gradient-step-3: #5d6ae5;
+
+  /* Входящий бабл — тёмно-серый */
+  --bubbles-background-bubble-in-step-1: #23252b;
+  --bubbles-background-bubble-in-step-2: #23252b;
+  --bubbles-background-bubble-in-step-3: #23252b;
+
+  /* Текст */
+  --bubbles-text-body: #fff;
+  --bubbles-text-body-secondary: #ffffffa3;
+  --bubbles-text-time: #ffffffa3;
+  --bubbles-text-author: #fff;
+  --bubbles-text-action: #fff;
+  --bubbles-text-link: #fff;
+
+  /* Иконки статуса — приглушённые белые */
+  --bubbles-icon-read-status: #ffffffe0;
+  --bubbles-icon-action: #6965e5;
+
+  /* Скругления */
+  --border-radius-local-bubble-regular: 14px;
+  --border-radius-local-bubble-stack-corner: 4px;
 }
+
 
 /* ========== Light theme (space) ========== */
 /* Важно: в этом блоке — только переопределения, которые отличаются от тёмной. Базовые значения остаются из :root */
@@ -204,4 +234,28 @@
   --states-icon-primary-disabled: #6f7276a3;
   --states-background-card-hover: #f6f6f6;
   --states-background-card-selected: #007aff14;
+
+  /* ============ Bubbles ============ */
+  /* Исходящий — светло-голубой */
+  --bubbles-background-bubble: #e9fdff;
+  --bubbles-background-bubble-gradient-step-1: #e9fdff;
+  --bubbles-background-bubble-gradient-step-2: #e9fdff;
+  --bubbles-background-bubble-gradient-step-3: #e9fdff;
+  
+  /* Входящий — белый/светло-серый */
+  --bubbles-background-bubble-in-step-1: #ffffff;
+  --bubbles-background-bubble-in-step-2: #f5f7fa;
+  --bubbles-background-bubble-in-step-3: #edeef2;
+  
+  /* Текст — тёмный */
+  --bubbles-text-body: #011c29;
+  --bubbles-text-body-secondary: #011c2985;
+  --bubbles-text-time: #0784b8;
+  --bubbles-text-author: #0784b8;
+  --bubbles-text-action: #0784b8;
+  --bubbles-text-link: #0784b8;
+  
+  /* Иконки статуса — голубые */
+  --bubbles-icon-read-status: #0f8ec2;
+  --bubbles-icon-action: #e9fdff;
 }
