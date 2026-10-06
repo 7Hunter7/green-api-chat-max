@@ -12,6 +12,8 @@ export interface MenuItemProps {
   danger?: boolean;
   /** Подменю */
   submenu?: MenuItemProps[];
+  /** Активный пункт (выбранная тема) */
+  active?: boolean;
 }
 
 export function MenuItem({
@@ -21,6 +23,7 @@ export function MenuItem({
   disabled = false,
   danger = false,
   submenu,
+  active = false,
 }: MenuItemProps) {
   const itemId = useId();
   const itemRef = useRef<HTMLButtonElement>(null);
@@ -42,7 +45,11 @@ export function MenuItem({
     }
   };
 
-  const classes = ["menu-item", danger && "menu-item--danger"]
+  const classes = [
+    "menu-item",
+    danger && "menu-item--danger",
+    active && "menu-item--active",
+  ]
     .filter(Boolean)
     .join(" ");
 
@@ -60,6 +67,13 @@ export function MenuItem({
       >
         {icon && <span className="menu-item__icon">{icon}</span>}
         <span className="menu-item__label">{children}</span>
+        
+        {active && !hasSubmenu && (
+          <span className="menu-item__check">
+            <Icon name="check" size={16} />
+          </span>
+        )}
+      
         {hasSubmenu && (
           <span className="menu-item__chevron">
             <Icon name="chevron_right_mini" size={12} />

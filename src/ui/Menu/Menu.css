@@ -106,3 +106,20 @@
   display: flex;
   width: 100%;
 }
+
+.menu-item--active {
+  color: var(--accent-primary);
+}
+
+.menu-item--active .menu-item__icon {
+  color: var(--accent-primary);
+}
+
+.menu-item__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--accent-primary);
+}

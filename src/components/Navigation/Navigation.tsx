@@ -113,19 +113,22 @@ export function Navigation({
                 submenu={[
                   {
                     children: "Системная",
+                    active: themeMode === "system",
                     onClick: () => onThemeChange?.("system"),
                   },
                   {
                     children: "Светлая",
+                    active: themeMode === "light",
                     onClick: () => onThemeChange?.("light"),
                   },
                   {
                     children: "Тёмная",
+                    active: themeMode === "dark",
                     onClick: () => onThemeChange?.("dark"),
                   },
                 ]}
               >
-                Тема
+                Тема оформления
               </MenuItem>
               
               <MenuItem
