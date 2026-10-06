@@ -1,4 +1,5 @@
-import { NavButton } from "../../ui";
+import { NavButton, Menu, MenuItem, Icon } from "../../ui";
+import type { ThemeMode } from "../../hooks/useTheme";
 import "./Navigation.css";
 
 export type NavigationSection =
@@ -12,7 +13,9 @@ export type NavigationSection =
 interface Props {
   activeSection?: NavigationSection;
   onSelectSection?: (section: NavigationSection) => void;
-  // onLogout?: () => void;
+  onLogout?: () => void;
+  themeMode?: ThemeMode;
+  onThemeChange?: (mode: ThemeMode) => void;
   newCount?: number;
   channelsCount?: number;
 }
@@ -20,7 +23,9 @@ interface Props {
 export function Navigation({
   activeSection = "all",
   onSelectSection,
-  // onLogout,
+  onLogout,
+  themeMode,
+  onThemeChange,
   newCount = 0,
   channelsCount = 0,
 }: Props) {
@@ -91,12 +96,45 @@ export function Navigation({
           />
 
           <div className="navigation__item navigation__item--settings">
-            <NavButton
-              iconName="settings_fill"
-              label="Настройки"
-              active={activeSection === "settings"}
-              onClick={() => onSelectSection?.("settings")}
-            />
+            <Menu
+              align="start"
+              position="right"
+              trigger={
+                <NavButton
+                  iconName="settings_fill"
+                  label="Настройки"
+                  active={activeSection === "settings"}
+                  onClick={() => onSelectSection?.("settings")}
+                />
+              }
+            >
+              <MenuItem
+                icon={<Icon name="magic_wand" size={20} />}
+                submenu={[
+                  {
+                    children: "Системная",
+                    onClick: () => onThemeChange?.("system"),
+                  },
+                  {
+                    children: "Светлая",
+                    onClick: () => onThemeChange?.("light"),
+                  },
+                  {
+                    children: "Тёмная",
+                    onClick: () => onThemeChange?.("dark"),
+                  },
+                ]}
+              >
+                Тема
+              </MenuItem>
+              
+              <MenuItem
+                icon={<Icon name="autorization_leave" size={20} />}
+                onClick={onLogout}
+              >
+                Выйти
+              </MenuItem>
+            </Menu>
           </div>
         </div>
       </div>

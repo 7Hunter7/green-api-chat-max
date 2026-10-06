@@ -45,6 +45,7 @@ export type IconName =
   | "forward"
   | "forward_fill"
   | "launch"
+  | "magic_wand"
   | "message_check"
   | "message_unread"
   | "reply"

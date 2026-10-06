@@ -11,6 +11,7 @@ import { useChatPolling } from "./hooks/useChatPolling";
 import { useConversations } from "./hooks/useConversations";
 import { useMessagesStorage } from "./hooks/useMessagesStorage";
 import type { ChatMessage, Credentials, InstanceState } from "./types";
+import { useTheme } from "./hooks/useTheme";
 import "./App.css";
 
 const CREDENTIALS_KEY = "green-api-chat-credentials";
@@ -25,6 +26,7 @@ function loadCredentials(): Credentials | null {
 }
 
 export default function App() {
+  const { mode: themeMode, setMode: setThemeMode } = useTheme();
   const [credentials, setCredentials] = useState<Credentials | null>(() =>
     loadCredentials(),
   );
@@ -48,7 +50,7 @@ export default function App() {
   const {
     messagesByChat,
     setMessagesByChat,
-    // clearAll: clearAllMessages,
+    clearAll: clearAllMessages,
   } = useMessagesStorage();
 
   // Восстановление сессии при перезагрузке
@@ -171,12 +173,12 @@ export default function App() {
     if (activeChatId === chatId) setActiveChatId(null);
   };
 
-  /*  const handleLogout = () => {
+  const handleLogout = () => {
     setCredentials(null);
     setActiveChatId(null);
     setActiveSection("all");
     clearAllMessages();
-  }; */
+  };
 
   const handleMessageSent = (msg: ChatMessage) => {
     setMessagesByChat((prev) => ({
@@ -259,6 +261,9 @@ export default function App() {
       <Navigation
         activeSection={activeSection}
         onSelectSection={setActiveSection}
+        onLogout={handleLogout}
+        themeMode={themeMode}
+        onThemeChange={setThemeMode}
       />
       <Sidebar
         conversations={conversations}
