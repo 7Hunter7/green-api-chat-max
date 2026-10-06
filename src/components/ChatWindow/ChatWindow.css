@@ -96,3 +96,7 @@
   position: relative;
   z-index: 2;
 }
+
+.chat-window > .chat-header {
+  z-index: 3;
+}
